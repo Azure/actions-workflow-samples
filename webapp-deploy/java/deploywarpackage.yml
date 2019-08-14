@@ -1,0 +1,30 @@
+on: [push,pullrequest]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    # checkout the repo
+    - uses: actions/checkout@master
+
+    # Azure login
+    - uses: azure/actions/login@master
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
+    
+    # build and clean
+    - name: maven build, clean
+      run: |
+        mvn clean install
+   
+    # deploy web app using publish profile credentials
+    - uses: azure/appservice-actions/webapp@master
+      with: 
+        app-name: mywarapp  # Replace with your app name
+        package: '${{ github.workspace }}/target/*.war'
+
+    # Azure logout 
+    - name: logout
+      run: |
+        az logout
