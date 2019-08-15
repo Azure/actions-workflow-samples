@@ -1,0 +1,30 @@
+on: [push,pullrequest]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    # checkout the repo
+    - uses: actions/checkout@master
+
+    # Azure login
+    - uses: azure/actions/login@master
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
+    
+    # dotnet build and publish
+    - name: dotnet publish
+      run: |
+        dotnet publish -c Release -o myapp 
+   
+    # deploy web app
+    - uses: azure/appservice-actions/webapp@master
+      with: 
+        app-name: mydotnetcoreapp  # Replace with your app name
+        package: './myapp'
+
+    # Azure logout 
+    - name: logout
+      run: |
+        az logout
