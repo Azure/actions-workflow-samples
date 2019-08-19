@@ -7,11 +7,6 @@ jobs:
 
     # checkout the repo
     - uses: actions/checkout@master
-
-    # Azure login
-    - uses: azure/actions/login@master
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
     
     # install dependencies, build, and test
     - name: npm install, build, and test
@@ -24,6 +19,11 @@ jobs:
     - name: archive myapp
       run: |
        zip -r myapp.zip .
+
+    # Azure login
+    - uses: azure/actions/login@master
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
    
     # deploy web app
     - uses: azure/appservice-actions/webapp@master
