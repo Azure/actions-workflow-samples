@@ -1,0 +1,45 @@
+# Action Requires
+# 1. Setup the AZURE_CREDENTIALS secrets in your Github Repository by following README.md
+# 2. Setup the REGISTRY_USERNAME secrets in your Github Repository by following README.md
+# 3. Setup the REGISTRY_PASSWORD secrets in your Github Repository by following README.md
+# 4. Replace REGISTRY, NAMESPACE, IMAGE, TAG in the following template with proper values
+# 5. Add this yaml file to your project's .github/workflows/
+# 6. Push your local project to your Github Repository
+
+name: Linux_Container_Workflow
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@master
+    - name: 'Login via Azure CLI'
+      uses: Azure/actions/login@master
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: 'Compose Customized Docker Image'
+      shell: bash
+      run: |
+        docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
+        # If your function app project is not located in your repository's root
+        # Please change the path to your directory for docker build
+        docker build . -t REGISTRY/NAMESPACE/IMAGE:TAG
+        docker push REGISTRY/NAMESPACE/IMAGE:TAG
+    - name: 'Run Azure Functions Container Action'
+      uses: Azure/functions-container-action@master
+      id: fa
+      with:
+        app-name: PLEASE_REPLACE_THIS_WITH_YOUR_FUNCTION_APP_NAME
+        image: REGISTRY/NAMESPACE/IMAGE:TAG
+    #- name: 'use the published functionapp url in upcoming steps'
+    #  run: |
+    #    echo "${{ steps.fa.outputs.app-url }}"
+
+# For more information on Github Actions:
+#   https://help.github.com/en/categories/automating-your-workflow-with-github-actions
