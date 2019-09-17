@@ -32,7 +32,7 @@ jobs:
         docker build . -t REGISTRY/NAMESPACE/IMAGE:TAG
         docker push REGISTRY/NAMESPACE/IMAGE:TAG
     - name: 'Run Azure Functions Container Action'
-      uses: Azure/functions-container-action@master
+      uses: Azure/functions-container-action@v1
       id: fa
       with:
         app-name: PLEASE_REPLACE_THIS_WITH_YOUR_FUNCTION_APP_NAME

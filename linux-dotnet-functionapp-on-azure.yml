@@ -35,7 +35,7 @@ jobs:
         dotnet build --configuration Release --output ./output
         popd
     - name: 'Run Azure Functions Action'
-      uses: Azure/functions-action@master
+      uses: Azure/functions-action@v1
       id: fa
       with:
         app-name: PLEASE_REPLACE_THIS_WITH_YOUR_FUNCTION_APP_NAME
