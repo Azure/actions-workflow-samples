@@ -12,7 +12,7 @@ jobs:
     - name: Setup Node 10.x
       uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: '10.x' # Replace with specific Node version : 8.x, 10.x, 12.x
     - name: npm install, build, and test
       run: |
         npm install
@@ -22,5 +22,5 @@ jobs:
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: mynodeapp
+        app-name: mynodeapp # Replace with your app name
         publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
