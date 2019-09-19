@@ -9,29 +9,18 @@ jobs:
     - uses: actions/checkout@master
     
     # install dependencies, build, and test
+    - name: Setup Node 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
     - name: npm install, build, and test
       run: |
         npm install
         npm run build --if-present
         npm run test --if-present
 
-    # Archive built app
-    - name: archive myapp
-      run: |
-       zip -r myapp.zip .
-
-    # Azure login
-    - uses: azure/actions/login@master
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
-   
-    # deploy web app
-    - uses: azure/webapps-deploy@v1
+    - name: 'Run Azure webapp deploy action using publish profile credentials'
+      uses: azure/webapps-deploy@v1
       with: 
-        app-name: mynodeapp   # Replace with your app name
-        package: './myapp.zip'
-
-    # Azure logout 
-    - name: logout
-      run: |
-        az logout
+        app-name: mynodeapp
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
