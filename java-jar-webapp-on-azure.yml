@@ -8,23 +8,17 @@ jobs:
     # checkout the repo
     - uses: actions/checkout@master
     
-    # package
-    - name: maven package
-      run: |
-        mvn package
-
-    # Azure login
-    - uses: azure/actions/login@master
+    # Maven Build and package
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
-   
-    # deploy web app using publish profile credentials
+        java-version: 1.8
+    - name: Build with Maven
+      run: mvn package --file pom.xml
+
+   # deploy web app using publish profile credentials
     - uses: azure/webapps-deploy@v1
       with: 
         app-name: myjarapp  # Replace with your app name
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
         package: '${{ github.workspace }}/target/*.jar'
-
-    # Azure logout 
-    - name: logout
-      run: |
-        az logout
