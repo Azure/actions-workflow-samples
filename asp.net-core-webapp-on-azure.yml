@@ -13,18 +13,9 @@ jobs:
       run: |
         dotnet publish -c Release -o myapp 
 
-    # Azure login
-    - uses: azure/actions/login@master
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
-   
-    # deploy web app
-    - uses: azure/webapps-deploy@v1
+    - name: 'Run Azure webapp deploy action using publish profile credentials'
+      uses: azure/webapps-deploy@v1
       with: 
-        app-name: mydotnetcoreapp  # Replace with your app name
+        app-name: mydotnetcoreapp # Replace with your app name
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
         package: './myapp'
-
-    # Azure logout 
-    - name: logout
-      run: |
-        az logout
