@@ -8,7 +8,15 @@ jobs:
     # checkout the repo
     - uses: actions/checkout@master
     
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.108 # Replace with specific Node version
+
+    
     # dotnet build and publish
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
     - name: dotnet publish
       run: |
         dotnet publish -c Release -o myapp 
@@ -18,4 +26,4 @@ jobs:
       with: 
         app-name: mydotnetcoreapp # Replace with your app name
         publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
-        package: './myapp'
+        package: './myapp' 
