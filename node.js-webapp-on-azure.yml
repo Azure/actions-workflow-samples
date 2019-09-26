@@ -24,3 +24,6 @@ jobs:
       with: 
         app-name: mynodeapp # Replace with your app name
         publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
+        #package: '.'  #default value is entire repo
+        # If your function app project is not located in your repository's root
+        # Please consider prefixing the project path in this package parameter
