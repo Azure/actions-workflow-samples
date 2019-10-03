@@ -1,9 +1,9 @@
 
 # Action Requires
-# 1. Setup the AZURE_CREDENTIALS secrets in your Github Repository
+# 1. Setup the AZURE_CREDENTIALS secrets in your GitHub Repository
 # 2. Replace PLEASE_REPLACE_THIS_WITH_YOUR_FUNCTION_APP_NAME with your Azure function app name
 # 3. Add this yaml file to your project's .github/workflows/
-# 4. Push your local project to your Github Repository
+# 4. Push your local project to your GitHub Repository
 
 name: Linux_Node_Workflow
 
@@ -16,7 +16,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: 'Checkout Github Action'
+    - name: 'Checkout GitHub Action'
       uses: actions/checkout@master
 
     # If you want to use publish profile credentials instead of Azure Service Principal
@@ -58,5 +58,5 @@ jobs:
     #  run: |
     #    echo "${{ steps.fa.outputs.app-url }}"
 
-# For more information on Github Actions:
+# For more information on GitHub Actions:
 #   https://help.github.com/en/categories/automating-your-workflow-with-github-actions

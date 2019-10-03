@@ -1,10 +1,10 @@
 # Action Requires
-# 1. Setup the AZURE_CREDENTIALS secrets in your Github Repository 
-# 2. Setup the REGISTRY_USERNAME secrets in your Github Repository 
-# 3. Setup the REGISTRY_PASSWORD secrets in your Github Repository 
+# 1. Setup the AZURE_CREDENTIALS secrets in your GitHub Repository
+# 2. Setup the REGISTRY_USERNAME secrets in your GitHub Repository
+# 3. Setup the REGISTRY_PASSWORD secrets in your GitHub Repository
 # 4. Replace REGISTRY, NAMESPACE, IMAGE, TAG in the following template with proper values
 # 5. Add this yaml file to your project's .github/workflows/
-# 6. Push your local project to your Github Repository
+# 6. Push your local project to your GitHub Repository
 
 name: Linux_Container_Workflow
 
@@ -17,21 +17,21 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: 'Checkout Github Action'
+    - name: 'Checkout GitHub Action'
       uses: actions/checkout@master
-      
+
     - name: 'Login via Azure CLI'
       uses: Azure/actions/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
+
     - name: 'Docker Login'
       uses: azure/docker-login@v1
       with:
         login-server: contoso.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-    
+
     - name: 'Compose Customized Docker Image'
       shell: bash
       run: |
@@ -39,7 +39,7 @@ jobs:
         # Please change the path to your directory for docker build
         docker build . -t REGISTRY/NAMESPACE/IMAGE:TAG
         docker push REGISTRY/NAMESPACE/IMAGE:TAG
-    
+
     - name: 'Run Azure Functions Container Action'
       uses: Azure/functions-container-action@v1
       id: fa
@@ -49,10 +49,10 @@ jobs:
     #- name: 'use the published functionapp url in upcoming steps'
     #  run: |
     #    echo "${{ steps.fa.outputs.app-url }}"
-    
+
     - name: Azure logout
       run: |
         az logout
 
-# For more information on Github Actions:
+# For more information on GitHub Actions:
 #   https://help.github.com/en/categories/automating-your-workflow-with-github-actions
