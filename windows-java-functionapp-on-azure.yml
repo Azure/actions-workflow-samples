@@ -1,6 +1,6 @@
 
 # Action Requires
-# 1. Setup the AZURE_CREDENTIALS secrets in your Github Repository by following README.md
+# 1. Setup the AZURE_CREDENTIALS secrets in your Github Repository
 # 2. Replace PLEASE_REPLACE_THIS_WITH_YOUR_FUNCTION_APP_NAME with your Azure function app name
 # 3. Replace POM_ARTIFACT_ID with the value in project <artifactId> in pom.xml
 # 4. Replace POM_FUNCTION_APP_NAME with the value in properties <functionAppName> in pom.xml
@@ -20,6 +20,8 @@ jobs:
     steps:
     - name: 'Checkout Github Action'
       uses: actions/checkout@master
+    # If you want to use publish profile credentials instead of Azure Service Principal
+    # Please comment this 'Login via Azure CLI' block
     - name: 'Login via Azure CLI'
       uses: Azure/actions/login@master
       with:
@@ -47,6 +49,9 @@ jobs:
         # If your function app project is not located in your repository's root
         # Please consider prefixing the project path in this package parameter
         package: ./POM_ARTIFACT_ID/target/azure-functions/POM_FUNCTION_APP_NAME
+        # If you want to use publish profile credentials instead of Azure Service Principal
+        # Please uncomment the following line
+        # publish-profile: ${{ secrets.SCM_CREDENTIALS }}
     #- name: 'use the published functionapp url in upcoming steps'
     #  run: |
     #    echo "${{ steps.fa.outputs.app-url }}"
