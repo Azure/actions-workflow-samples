@@ -23,7 +23,7 @@ jobs:
        zip -r myapp.zip .
 
     # Azure login
-    - uses: azure/actions/login@master
+    - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
         
