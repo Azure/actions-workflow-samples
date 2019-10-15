@@ -22,7 +22,7 @@ jobs:
     # If you want to use publish profile credentials instead of Azure Service Principal
     # Please comment this 'Login via Azure CLI' block
     - name: 'Login via Azure CLI'
-      uses: Azure/actions/login@master
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
