@@ -1,3 +1,10 @@
+# Action workflow Pre-requisites
+# 1. Setup the azureWebAppPublishProfile secret in your GitHub Repository with the Publish profile details of your Azure Web App. 
+#    For help, refer to https://help.github.com/en/github/automating-your-workflow-with-github-actions/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables
+# 2. Replace REPLACE_THIS_WITH_YOUR_WEB_APP_NAME with your Azure Web app name
+# 3. Add this yaml file to your project's .github/workflows/
+# 4. Push your local project to your GitHub Repository
+
 on: [push, pull_request]
 
 jobs:
@@ -9,21 +16,24 @@ jobs:
     - uses: actions/checkout@master
     
     # install dependencies, build, and test
-    - name: Setup Node 10.x
+    - name: Setup Node
       uses: actions/setup-node@v1
-      with:
-        node-version: '10.x' # Replace with specific Node version : 8.x, 10.x, 12.x
+    #  with:
+    #   node-version: REPLACE_THIS_WITH_NODE_VERSION_OF_YOUR_APP # Default is '10.x'. Other examples: 8.x, 10.15.1, >=10.15.0'
     - name: npm install, build, and test
       run: |
         npm install
         npm run build --if-present
         npm run test --if-present
 
+    # Deploy Web app to Azure using azure/webapps-deploy action (https://github.com/Azure/webapps-deploy)
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: mynodeapp # Replace with your app name
-        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
-        #package: '.'  #default value is entire repo
-        # If your function app project is not located in your repository's root
-        # Please consider prefixing the project path in this package parameter
+        app-name: REPLACE_THIS_WITH_YOUR_WEB_APP_NAME 
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable "azureWebAppPublishProfile" in repository settings
+      # package: '.'  #default value is entire repo
+      # If your web app project is not located in your repository's root, include the project path in the package parameter. example: ./host/APP_NAME 
+
+  # For more information on GitHub Actions for Azure, refer to https://github.com/Azure/Actions
+  # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
