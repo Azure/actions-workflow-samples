@@ -1,39 +1,43 @@
-# Action workflow Pre-requisites
-# 1. Setup the azureWebAppPublishProfile secret in your GitHub Repository with the Publish profile details of your Azure Web App. 
-#    For help, refer to https://help.github.com/en/github/automating-your-workflow-with-github-actions/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables
-# 2. Replace REPLACE_THIS_WITH_YOUR_WEB_APP_NAME with your Azure Web app name
-# 3. Add this yaml file to your project's .github/workflows/
-# 4. Push your local project to your GitHub Repository
+name: Deploy Node.js to Azure Web App
 
-on: [push, pull_request]
+on:
+  [push]
+
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_WEBAPP_PUBLISH_PROFILE
+#
+# 2. Change these variables for your configuration:
+env:
+  AZURE_WEBAPP_NAME: your-app-name    # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '10.x'                # set this to the node version to use
 
 jobs:
   build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-
-    # checkout the repo
     - uses: actions/checkout@master
-    
-    # install dependencies, build, and test
-    - name: Setup Node
+    - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v1
-    #  with:
-    #   node-version: REPLACE_THIS_WITH_NODE_VERSION_OF_YOUR_APP # Default is '10.x'. Other examples: 8.x, 10.15.1, >=10.15.0'
+      with:
+        node-version: ${{ env.NODE_VERSION }}
     - name: npm install, build, and test
       run: |
+        # Build and test the project, then
+        # deploy to Azure Web App.
         npm install
         npm run build --if-present
         npm run test --if-present
-
-    # Deploy Web app to Azure using azure/webapps-deploy action (https://github.com/Azure/webapps-deploy)
-    - name: 'Run Azure webapp deploy action using publish profile credentials'
+    - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: REPLACE_THIS_WITH_YOUR_WEB_APP_NAME 
-        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable "azureWebAppPublishProfile" in repository settings
-      # package: '.'  #default value is entire repo
-      # If your web app project is not located in your repository's root, include the project path in the package parameter. example: ./host/APP_NAME 
-
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        
   # For more information on GitHub Actions for Azure, refer to https://github.com/Azure/Actions
   # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
