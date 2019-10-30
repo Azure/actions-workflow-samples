@@ -1,0 +1,15 @@
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - uses: Azure/sql-action@v1
+      with:
+        server-name: xaxle.database.windows.net
+        connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+        dacpac-package: './Database1.dacpac'
