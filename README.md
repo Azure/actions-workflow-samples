@@ -6,12 +6,12 @@ Each workflow must be written in YAML and have a `.yml` extension.
 
 For example: `asp.net-core-webapp-on-azure.yml`
 
-## Guidelines to author a new sample workflow
+## Guidelines to select/author a new sample workflow
 
 **Naming Notation:**
 * `os-ecosystem-ServiceName-on-azure`: example, linux-container-functionapp-on-azure.yml
-*  Specifying OS in the anme is optional if the action workflow sample is OS agnostic and doesnt significantly change between OS (Linux/Windows) 
-* ecosystem can be a language (.NET, Nodejs, java, Python, Ruby etc.) or Docker/Container Or Database flavours like SQL/MySQL etc.
+* OS in the name is optional if the action workflow sample is OS agnostic and doesnt significantly change between OS (Linux/Windows) 
+* Ecosystem can be a language (.NET, Nodejs, java, Python, Ruby etc.) or Docker/Container Or Database flavours like SQL/MySQL etc.
 
 **Workflow structure**
 * Include 'name' for every workflow to indicate the purpose of the workflow
