@@ -9,15 +9,15 @@ You use Azure starter templates present in this repo to easily create GitHub CI/
 **Folder Structure:**
 These workflow samples to automate your deployment workflows targeting various Azure services are organised under folders of same names. For example: `/AppService/asp.net-core-webapp-on-azure.yml`
 
-- [**AppService** Samples](https://github.com/Azure/actions-workflow-samples/tree/master/AppService) to configure and deploy mission-critical web applications that scale with your business, deploy to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
+- [**/AppService** ](https://github.com/Azure/actions-workflow-samples/tree/master/AppService) Samples to configure and deploy mission-critical web applications that scale with your business, deploy to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
 
-- [**FunctionApp** Samples](https://github.com/Azure/actions-workflow-samples/tree/master/FunctionApp) to build and deploy serverless apps to [Azure Functions](https://azure.microsoft.com/en-us/services/functions/)
+- [**/FunctionApp**](https://github.com/Azure/actions-workflow-samples/tree/master/FunctionApp) Samples to build and deploy serverless apps to [Azure Functions](https://azure.microsoft.com/en-us/services/functions/)
 
-- [**Kubernetes** Samples](https://github.com/Azure/actions-workflow-samples/tree/master/Kubernetes) to deploy to any Kubernetes cluster on-premise or any cloud including [Azure Kubernetes service](https://azure.microsoft.com/en-us/services/kubernetes-service/)
+- [**/Kubernetes**](https://github.com/Azure/actions-workflow-samples/tree/master/Kubernetes) Samples to deploy to any Kubernetes cluster on-premise or any cloud including [Azure Kubernetes service](https://azure.microsoft.com/en-us/services/kubernetes-service/)
 
-- [**Database** Samples](https://github.com/Azure/actions-workflow-samples/tree/master/Database) to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
+- [**/Database**](https://github.com/Azure/actions-workflow-samples/tree/master/Database) Samples to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
 
-- [**Other** Samples](https://github.com/Azure/actions-workflow-samples/tree/master/Others) 
+- [**/Other**](https://github.com/Azure/actions-workflow-samples/tree/master/Others) Samples
 
 
 **Naming Notation:**
