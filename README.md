@@ -1,53 +1,37 @@
----
-page_type: sample
-languages:
-- csharp
-products:
-- dotnet
-description: "Add 150 character max description"
-urlFragment: "update-this-to-unique-url-stub"
----
+## Starter Action Workflows to deploy to Azure
 
-# Official Microsoft Sample
+[GitHub Actions for Azure](https://github.com/Azure/actions) help you easily create workflows to build, test, package, release and deploy to Azure, following a push or pull request.
 
-<!-- 
-Guidelines on README format: https://review.docs.microsoft.com/help/onboard/admin/samples/concepts/readme-template?branch=master
+You use Azure starter templates present in this repo to easily create GitHub CI/CD workflows targeting Azure, to deploy your apps created with popular languages and frameworks such as .NET, Node.js, Java, PHP, Ruby or Python, in containers or running on any operating system.
 
-Guidance on onboarding samples to docs.microsoft.com/samples: https://review.docs.microsoft.com/help/onboard/admin/samples/process/onboarding?branch=master
+## Guidelines to select/author a new sample workflow
 
-Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
--->
+**Folder Structure:**
+These workflow samples to automate your deployment workflows targeting various Azure services are organised under folders of same names. For example: `/AppService/asp.net-core-webapp-on-azure.yml`
 
-Give a short description for your sample here. What does it do and why is it important?
+- [App Service Samples](https://github.com/Azure/actions-workflow-samples/tree/master/AppService) to configure and deploy mission-critical web applications that scale with your business, deploy to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
 
-## Contents
+- [Function App Samples](https://github.com/Azure/actions-workflow-samples/tree/master/FunctionApp) to build and deploy serverless apps to [Azure Functions](https://azure.microsoft.com/en-us/services/functions/)
 
-Outline the file contents of the repository. It helps users navigate the codebase, build configuration and any related assets.
+- [Kubernetes Samples](https://github.com/Azure/actions-workflow-samples/tree/master/Kubernetes) to deploy to any Kubernetes cluster on-premise or any cloud including [Azure Kubernetes service](https://azure.microsoft.com/en-us/services/kubernetes-service/)
 
-| File/folder       | Description                                |
-|-------------------|--------------------------------------------|
-| `src`             | Sample source code.                        |
-| `.gitignore`      | Define what to ignore at commit time.      |
-| `CHANGELOG.md`    | List of changes to the sample.             |
-| `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
-| `README.md`       | This README file.                          |
-| `LICENSE`         | The license for the sample.                |
+- [Database Samples](https://github.com/Azure/actions-workflow-samples/tree/master/Database) to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
 
-## Prerequisites
+- [Other Samples](https://github.com/Azure/actions-workflow-samples/tree/master/Others) 
 
-Outline the required components and tools that a user might need to have on their machine in order to run the sample. This can be anything from frameworks, SDKs, OS versions or IDE releases.
 
-## Setup
+**Naming Notation:**
+* `os-ecosystem-ServiceName-on-azure`: example, linux-container-functionapp-on-azure.yml
+* OS in the name is optional if the action workflow sample is OS agnostic and doesnt significantly change between OS (Linux/Windows) 
+* Ecosystem can be a language (.NET, Nodejs, java, Python, Ruby etc.) or Docker/Container Or Database flavours like SQL/MySQL etc.
 
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
-
-## Runnning the sample
-
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
-
-## Key concepts
-
-Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
+**Workflow structure**
+* Include 'name' for every workflow to indicate the purpose of the workflow
+* Ensure that starter workflows run on: push by default.  
+* For all secrets to be defined in the workflow, use UPPER_CASE with underscore delimiters instead of snake_case or camelCase.
+* Include a commented **Configuration section** which incldes hyperlinks to documentation for the Actions used and other pre-reqs.
+* Define environment variables as part of configuration.  We think this will help provide visibility into the things that need to be configured as part of te workflow.
+* Ensure all Azure actions referenced in the workflow are pointing to a released version of the action and not from the master. For list of all released GitHub actions for Azure, please refer to https://github.com/Azure/actions
 
 ## Contributing
 
