@@ -4,7 +4,23 @@ Use `Azure/functions-action` to automate your workflows to deploy to [Azure Func
 
 If you are looking for a GitHub Action to deploy your customized container image into an Azure Functions container, use [`azure/functions-container-action`](https://github.com/Azure/functions-container-action).
 
-# End-to-End Workflow
+# End-to-End Workflows
+
+## Create Azure function app and Deploy using GitHub Actions (RBAC)
+1. Follow the tutorial [Azure Functions Quickstart](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-vs-code)
+2. Pick a template from the following table depends on your Azure Functions **runtime** and **OS type** and place the template to `.github/workflows/` in your project repository.
+3. Change `app-name` to your function app name.
+4. Commit and push your project to GitHub repository, you should see a new GitHub workflow initiated in **Actions** tab.
+
+| Templates  | Windows |  Linux |
+|------------|---------|--------|
+| DotNet     | [windows-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-dotnet-functionapp-on-azure.yml) | [linux-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-dotnet-functionapp-on-azure.yml) |
+| Node       | [windows-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-node.js-functionapp-on-azure.yml) | [linux-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-node.js-functionapp-on-azure.yml) |
+| PowerShell | [windows-powershell-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-powershell-functionapp-on-azure.yml) | - |
+| Java       | [windows-java-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-java-functionapp-on-azure.yml) | - |
+| Python     | - | [linux-python-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-python-functionapp-on-azure.yml) |
+| DOCKER     | - | [linux-container-functionapp-on-azure.yml ](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-container-functionapp-on-azure.yml) |
+
 
 ## Dependencies on other Github Actions
 * [Checkout](https://github.com/actions/checkout) Checkout your Git repository content into GitHub Actions agent.
@@ -80,22 +96,3 @@ You may want to create an [Azure Service Principal for RBAC](https://docs.micros
   }
 ```
 3. Paste the json response from above Azure CLI to your Github Repository > Settings > Secrets > Add a new secret > **AZURE_CREDENTIALS**
-
-## Create Azure function app and Deploy using GitHub Actions (RBAC)
-1. Follow the tutorial [Azure Functions Quickstart](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-vs-code)
-2. Pick a template from the following table depends on your Azure Functions **runtime** and **OS type** and place the template to `.github/workflows/` in your project repository.
-3. Change `app-name` to your function app name.
-4. Commit and push your project to GitHub repository, you should see a new GitHub workflow initiated in **Actions** tab.
-
-| Templates  | Windows |  Linux |
-|------------|---------|--------|
-| DotNet     | [windows-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-dotnet-functionapp-on-azure.yml) | [linux-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-dotnet-functionapp-on-azure.yml) |
-| Node       | [windows-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-node.js-functionapp-on-azure.yml) | [linux-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-node.js-functionapp-on-azure.yml) |
-| PowerShell | [windows-powershell-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-powershell-functionapp-on-azure.yml) | - |
-| Java       | [windows-java-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-java-functionapp-on-azure.yml) | - |
-| Python     | - | [linux-python-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-python-functionapp-on-azure.yml) |
-| DOCKER     | - | [linux-container-functionapp-on-azure.yml ](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-container-functionapp-on-azure.yml) |
-
-If you are have extension project(s) in your repo, these templates will **NOT** resolve the **extensions.csproj** in your project. If you want to use binding extensions (e.g. Blob/Queue/EventHub Triggers), please consider [registering Azure Functions binding extensions](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-register) in your host.json.
-
-Alternatively, you can add a `- run: dotnet build --output ./bin` step **before** functions-action step.
