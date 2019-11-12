@@ -1,0 +1,51 @@
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    # Connect to Azure Container registry (ACR)
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_NAME }}.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }} 
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    # Docker build and push to a Azure Container registry (ACR)
+    - run: |
+        docker build . -t ${{ secrets.REGISTRY_NAME }}.azurecr.io.azurecr.io/myimage:${{ github.sha }}
+        docker push ${{ secrets.REGISTRY_NAME }}.azurecr.io.azurecr.io/myimage:${{ github.sha }}
+    
+    # Set the target AKS cluster. 
+    - uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.CLUSTER_RESOURCE_GROUP }}
+    
+    # Create namespace if doesn't exist
+    - run: |
+        kubectl create namespace ${{ secrets.NAMESPACE }} --dry-run -o json | kubectl apply -f -
+    
+    # Create imagepullsecret for Azure Container registry (ACR)
+    - uses: azure/k8s-create-secret@v1
+      with:
+        container-registry-url: atulmakshelm.azurecr.io
+        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        secret-name: ${{ secrets.REGISTRY_NAME }}-registry-connection
+        namespace: ${{ secrets.NAMESPACE }}
+    
+    # Deploy app to AKS
+    - uses: azure/k8s-deploy@v1
+      with:
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+        images: |
+          ${{ secrets.REGISTRY_NAME }}.azurecr.io/k8sdemo:${{ github.sha }}
+        imagepullsecrets: |
+          ${{ secrets.REGISTRY_NAME }}-registry-connection
+        namespace: ${{ secrets.NAMESPACE }}
