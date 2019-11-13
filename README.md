@@ -1,12 +1,25 @@
 ## Starter Action Workflows to deploy to Azure
 
-These are the workflow files for helping GitHub developers to easily get started with GitHub Actions to automate their deployment workflows targeting Azure. 
+[GitHub Actions for Azure](https://github.com/Azure/actions) help you easily create workflows to build, test, package, release and deploy to Azure, following a push or pull request.
 
-Each workflow must be written in YAML and have a `.yml` extension. 
-
-For example: `asp.net-core-webapp-on-azure.yml`
+You use Azure starter templates present in this repo to easily create GitHub CI/CD workflows targeting Azure, to deploy your apps created with popular languages and frameworks such as .NET, Node.js, Java, PHP, Ruby or Python, in containers or running on any operating system.
 
 ## Guidelines to select/author a new sample workflow
+
+**Folder Structure:**
+These workflow samples to automate your deployment workflows targeting various Azure services are organised under folders of same names. For example: `/AppService/asp.net-core-webapp-on-azure.yml`
+
+- [**/AppService** ](https://github.com/Azure/actions-workflow-samples/tree/master/AppService) Samples to configure and deploy web applications that scale with your business, to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
+
+- [**/FunctionApp**](https://github.com/Azure/actions-workflow-samples/tree/master/FunctionApp) Samples to build and deploy serverless apps to [Azure Functions](https://azure.microsoft.com/en-us/services/functions/)
+
+- [**/Kubernetes**](https://github.com/Azure/actions-workflow-samples/tree/master/Kubernetes) Samples to deploy to any Kubernetes cluster on-premise or any cloud including [Azure Kubernetes service](https://azure.microsoft.com/en-us/services/kubernetes-service/)
+
+- [**/Database**](https://github.com/Azure/actions-workflow-samples/tree/master/Database) Samples to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
+
+- [**/AzurePipelines**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePipelines) Samples to trigger a CD run in Azure Pipelines from a GitHub Action workflow
+
+- [**/AzureCLI**](https://github.com/Azure/actions-workflow-samples/tree/master/AzureCLI) Samples to run Azure CLI sripts to provision and manage Azure resources from a GitHub Action workflow
 
 **Naming Notation:**
 * `os-ecosystem-ServiceName-on-azure`: example, linux-container-functionapp-on-azure.yml
