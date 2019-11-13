@@ -13,12 +13,12 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }} 
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
-    # Docker build and push to a Azure Container registry (ACR)
+    # Container build and push to a Azure Container registry (ACR)
     - run: |
         docker build . -t ${{ secrets.REGISTRY_NAME }}.azurecr.io.azurecr.io/myimage:${{ github.sha }}
         docker push ${{ secrets.REGISTRY_NAME }}.azurecr.io.azurecr.io/myimage:${{ github.sha }}
     
-    # Set the target AKS cluster. 
+    # Set the target Azure Kubernetes Service (AKS) cluster. 
     - uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
@@ -32,7 +32,7 @@ jobs:
     # Create imagepullsecret for Azure Container registry (ACR)
     - uses: azure/k8s-create-secret@v1
       with:
-        container-registry-url: atulmakshelm.azurecr.io
+        container-registry-url: ${{ secrets.REGISTRY_NAME }}.azurecr.io
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.REGISTRY_NAME }}-registry-connection
