@@ -1,9 +1,19 @@
+# This workflow will build a docker container, publish it to Azure Container Registry, and deploy it to Azure Kubernetes Service using a helm chart.
+#
+# To configure this workflow:
+#
+# 1. Set up the following secrets in your workspace: 
+#     a. REGISTRY_USERNAME with ACR username
+#     b. REGISTRY_PASSWORD with ACR Password
+#     c. AZURE_CREDENTIALS with the output of `az ad sp create-for-rbac --sdk-auth`
+#
+# 2. Change the values for the REGISTRY_NAME, CLUSTER_NAME, CLUSTER_RESOURCE_GROUP and NAMESPACE environment variables (below).
+
 on: [push]
 
 # Environment variables available to all jobs and steps in this workflow
 env:
   REGISTRY_NAME: my-registry-name
-  REGISTRY_USERNAME: my-registry-username
   CLUSTER_NAME: my-cluster-name
   CLUSTER_RESOURCE_GROUP: my-cluster-resource-group
   NAMESPACE: default
