@@ -34,7 +34,7 @@ jobs:
        
     
   deploy-using-azure-pipelines:
-    needs: build-and-deploy-to-dev
+    needs: build-in-actions-workflow
     runs-on: ubuntu-latest
     steps:
     - name: 'Trigger an Azure Pipeline to deploy the app to PRODUCTION'
