@@ -37,9 +37,9 @@ Let's create this as a web app hosted in Azure.
 
 1. Follow the tutorial [Azure Web Apps Quickstart](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-nodejs) 
 
-1. Click on the `+` icon to create a new app service under the **VSCode GitHub Universe HOL** subscription.
+1. Click on the `+` icon to create a new app service under your subscription.
 
-   ![](assets/images/create-app-service.png)
+   ![](../assets/images/create-app-service.png)
 
 
 1. Give your webapp a unique name (we recommend calling it **node_express-{your name}**)
@@ -54,27 +54,27 @@ We'll use GitHub actions to automate our deployment workflow for this web app.
 
 1. In the portal, Overview page, click on "Get publish profile". A publish profile is a kind of deployment credential, useful when you don't own the Azure subscription. Open the downloaded settings file in VS Code and copy the contents of the file.
 
-   ![](assets/images/get-publish-profile.png)
+   ![](../assets/images/get-publish-profile.png)
 
 
 1. We will now add the publish profile as a secret associated with this repo. On the GitHub repository, click on the "Settings" tab.
 
-   ![](assets/images/github-settings.png)
+   ![](../assets/images/github-settings.png)
 
 
 1. Go to "Secrets". Create a new secret called "AZURE_WEBAPP_PUBLISH_PROFILE" and paste the contents from the settings file.
 
-   ![](assets/images/create-secret.png)
+   ![](../assets/images/create-secret.png)
 
 
 1. Now click on "Actions" in the top bar and create a new workflow. 
 
-   ![](assets/images/new-action.png)
+   ![](../assets/images/new-action.png)
 
 
 1. Find the **Deploy Node.js to Azure Web App** template and select "Set up this workflow".
 
-   ![](assets/images/node-action.png)
+   ![](../assets/images/node-action.png)
 
 
 1. Let's get into the details of what this workflow is doing.
@@ -150,13 +150,13 @@ build-and-deploy:
 
    **For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples **
 
-   ![](assets/images/add-yaml.png)
+   ![](../assets/images/add-yaml.png)
 
 - Once you're done editing the workflow by configuring the AZURE_WEBAPP_NAME, click on "Start commit". Committing the file will trigger the workflow.
 
 - You can go back to the Actions tab, click on your workflow, and see that the workflow is queued or being deployed. Wait for the job to complete successfully.
 
-   ![](assets/images/workflow-complete.png)
+   ![](../assets/images/workflow-complete.png)
 
 ## Test out your app!
 
