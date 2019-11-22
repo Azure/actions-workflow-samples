@@ -42,7 +42,7 @@ Let's create this as a web app hosted in Azure.
    ![](../assets/images/create-app-service.png)
 
 
-1. Give your webapp a unique name (we recommend calling it **node_express-{your name}**)
+1. Give your webapp a unique name
 
 1. Select **Linux** as your OS and **Node** as your runtime. 
 
@@ -72,7 +72,7 @@ We'll use GitHub actions to automate our deployment workflow for this web app.
    ![](../assets/images/new-action.png)
 
 
-1. Find the **Deploy Node.js to Azure Web App** template and select "Set up this workflow".
+1. Find the **Deploy Node.js to Azure Web App** template and select "Set up this workflow" which creates a new `workflow.yml` file in your repo under `.github/workflows/` folder path
 
    ![](../assets/images/node-action.png)
 
@@ -135,7 +135,7 @@ build-and-deploy:
 
     >For workflow syntax for GitHub Actions see [here](https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions)
 
-- **Deploy to Azure web app**: Change the `app-name` to the name of your web app. We are using [GitHub Action tp deploy Azure Web App ](https://github.com/Azure/webapps-deploy)to deploy to your Azure Web app with the publish profile stored in GitHub secrets which you created previously.
+- **Deploy to Azure web app**: Change the `app-name` to the name of your web app. We are using [GitHub Action to deploy Azure Web App ](https://github.com/Azure/webapps-deploy)to deploy to your Azure Web app with the publish profile stored in GitHub secrets which you created previously.
 
 ```yaml
  - name: 'Deploy to Azure WebApp'
