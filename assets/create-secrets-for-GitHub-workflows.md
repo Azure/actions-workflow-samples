@@ -10,7 +10,7 @@ You could use GitHub secrets to store your Azure Credentials, Publish profile of
 
 1. Under your repository name, click  Settings. On the GitHub repository, click on the "Settings" tab.
 
-   ![](/images/github-settings.png)
+   ![](images/github-settings.png)
 1. In the left sidebar, click Secrets.
 
 1. Type a name for your secret in the "Name" input box.
@@ -22,7 +22,7 @@ You could use GitHub secrets to store your Azure Credentials, Publish profile of
 
 1. Go to "Secrets". Create a new secret called "AZURE_WEBAPP_PUBLISH_PROFILE" and paste the contents from the settings file.
 
-   ![](/images/create-secret.png)
+   ![](images/create-secret.png)
    
 ## Consume secrets in your workflow
 
@@ -74,4 +74,4 @@ Follow the steps to create the Azure credentials (Service Principal) :
 1. Open the downloaded settings file in VS Code and copy the contents of the file.
 1. Create a new secret in your GitHub repo using the copied contents of the publish profile.
 
-   ![](/images/get-publish-profile.png)
+   ![](images/get-publish-profile.png)
