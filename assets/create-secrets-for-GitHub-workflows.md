@@ -7,22 +7,15 @@ You could use GitHub secrets to store your Azure Credentials, Publish profile of
 ## Creating secrets
 
 1. On GitHub, navigate to the main page of the repository.
-
-1. Under your repository name, click  Settings. On the GitHub repository, click on the "Settings" tab.
-
-   ![](images/github-settings.png)
+1. Under your repository name, click on the "Settings" tab.
 1. In the left sidebar, click Secrets.
-
-1. Type a name for your secret in the "Name" input box.
-
-1. Type the value for your secret.
-
-1. Click Add secret.
-
-
-1. Go to "Secrets". Create a new secret called "AZURE_WEBAPP_PUBLISH_PROFILE" and paste the contents from the settings file.
-
+1. On the right bar, click on "Add a new secret"
    ![](images/create-secret.png)
+1. Type a name for your secret in the "Name" input box.
+1. Type the value for your secret.
+1. Click Add secret.
+   ![](images/Add-secret-name-value.png)
+   
    
 ## Consume secrets in your workflow
 
