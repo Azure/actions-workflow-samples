@@ -27,7 +27,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
-    # Authentication
+    # Build and push container
     - run: |
         docker build . -t ${{ env.CONTAINER_REGISTRY }}/nodejsapp:latest
         docker push ${{ env.CONTAINER_REGISTRY }}/nodejsapp:latest
