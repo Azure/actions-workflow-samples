@@ -1,0 +1,31 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App
+
+on: [push, pull_request]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@master
+    
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '<dotnet-core-version>'
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+    
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp 
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v1
+      with: 
+        app-name: '<web-app-name>'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Define secret variable in repository settings as per action documentation
+        package: ${{env.DOTNET_ROOT}}/myapp 

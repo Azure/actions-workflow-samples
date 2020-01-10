@@ -1,0 +1,39 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy Docker Container to Azure Web App
+
+on: [push, pull_request]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@master
+    
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Log in to container registry'
+      uses: azure/docker-login@v1
+      with:
+        login-server: '<container-registry-name>'
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - name: 'Build and push container image'
+      run: |
+        docker build . -t <container-registry-name>/<image-name>:${{ github.sha }}
+        docker push <container-registry-name>/<image-name>:${{ github.sha }} 
+      
+    - name: 'Deploy to Azure Web App'
+      uses: azure/webapps-container-deploy@v1
+      with:
+        app-name: '<web-app-name>'
+        images: '<container-registry-name>/<image-name>:${{ github.sha }}'
+    
+    - name: 'Logout of Azure CLI'
+      run: az logout
