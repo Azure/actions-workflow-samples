@@ -24,5 +24,5 @@ jobs:
       uses: azure/webapps-deploy@v1
       with: 
         app-name: '<web-app-name>'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.<AZURE_WEBAPP_PUBLISH_PROFILE> }}
         package: '${{ github.workspace }}/target/*.war'
