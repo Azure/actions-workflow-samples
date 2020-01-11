@@ -15,7 +15,7 @@ jobs:
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '<dotnet-core-version>'
+        dotnet-version: '${dotnet-core-version}'
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
@@ -26,6 +26,6 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: '<web-app-name>'
-        publish-profile: ${{ secrets.<AZURE_WEBAPP_PUBLISH_PROFILE> }}
+        app-name: '${web-app-name}'
+        publish-profile: ${{ secrets.${azure-webapp-publish-profile-name} }}
         package: ${{env.DOTNET_ROOT}}/myapp

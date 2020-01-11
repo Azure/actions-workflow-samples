@@ -15,7 +15,7 @@ jobs:
     - name: Set up Node.js version
       uses: actions/setup-node@v1
       with:
-        node-version: '<node-version>'
+        node-version: '${node-version}'
     
     - name: npm install, build, and test
       run: |
@@ -26,6 +26,6 @@ jobs:
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: '<web-app-name>'
-        publish-profile: ${{ secrets.<AZURE_WEBAPP_PUBLISH_PROFILE> }}
+        app-name: '${web-app-name}'
+        publish-profile: ${{ secrets.${AZURE_WEBAPP_PUBLISH_PROFILE} }}
         package: .
