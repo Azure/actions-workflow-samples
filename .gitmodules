@@ -1,0 +1,3 @@
+[submodule "Kubernetes/java-on-aks"]
+	path = Kubernetes/java-on-aks
+	url = https://github.com/Azure-Samples/java-on-aks
