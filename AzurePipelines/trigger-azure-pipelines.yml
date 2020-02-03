@@ -27,7 +27,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
-    # Authentication
+    # Build and push container
     - run: |
         docker build . -t ${{ env.CONTAINER_REGISTRY }}/nodejsapp:latest
         docker push ${{ env.CONTAINER_REGISTRY }}/nodejsapp:latest
@@ -40,6 +40,6 @@ jobs:
     - name: 'Trigger an Azure Pipeline to deploy the app to PRODUCTION'
       uses: Azure/pipelines@releases/v1
       with:
-        azure-devops-project-url: 'https://dev.azure.com/AccountName/ProjectName'
+        azure-devops-project-url: 'https://dev.azure.com/OrganizationName/ProjectName'
         azure-pipeline-name: 'WebApp_Azure_Prod' 
         azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
