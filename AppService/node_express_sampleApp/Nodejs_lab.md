@@ -29,7 +29,7 @@ In this lab, you will:
 
 ### Setting up the GitHub repository
 
-**Node-Express** is an example Node.js web app. Let us fork this repository amd clone it into VS Code to get started with this lab.
+**Node-Express** is an example Node.js web app. Let us clone this repo and open the sample app code in VS Code to get started with this lab.
 
 ## Create an Azure App Service
 

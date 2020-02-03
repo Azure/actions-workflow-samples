@@ -1,0 +1,6 @@
+title: Deploy Node App to Azure
+tagline: Learn how to create an Action workflow to set up CICD for a Node App deployed to Azure
+description: Point users to a newly created issue and closes the original issue
+template:
+  name: node-app
+  repo: node-express
