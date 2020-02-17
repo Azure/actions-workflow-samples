@@ -1,48 +1,39 @@
-on: [push,pull_request]
+name: Deploy Python package to Azure Web App
+
+on:
+  [push]
+
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_WEBAPP_PUBLISH_PROFILE
+#
+# 2. Change these variables for your configuration:
+env:
+  AZURE_WEBAPP_NAME: Python-thecatsaidno # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'         # set this to the path to your web app project, defaults to the repository root
+  PYTHON_VERSION: '3.7'                  # set this to the python version to use
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-
-    # checkout the repo
-    - uses: actions/checkout@master
-    
-    # Set Python version
-    - uses: actions/setup-python@v1
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v1
       with:
-        python-version: '3.7.x' 
-        architecture: 'x64'
-    
-    # install dependencies
-    - name: python install
+        python-version: ${{ env.PYTHON_VERSION }}
+    - name: Install dependencies
       run: |
-        sudo apt install python3.6-venv
-        python3.6 -m venv env
-        source env/bin/activate
-        pip3.6 install setuptools
-        pip3.6 install -r requirements.txt
-
-    # Archive built app
-    - name: archive myapp
-      run: |
-       zip -r myapp.zip .
-
-    # Azure login
-    - uses: azure/login@v1
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Deploy Web App using GH Action azure/webapps-deploy
+      uses: azure/webapps-deploy@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }} # Define secret variable in repository settings as per action documentation
-        
-    # deploy web app
-    - uses: azure/webapps-deploy@v1
-      with: 
-        app-name: mypythonapp  # Replace with your app name
-        package: './myapp.zip'
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-    # Add startup command in app service configuration if required
-
-    # Azure logout 
-    - name: logout
-      run: |
-        az logout
-        
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
