@@ -31,7 +31,7 @@ Once login is done, the next set of Actions in the workflow can perform tasks su
 | DotNet     | [dotnet.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/asp.net-core-webapp-on-azure.yml) | https://github.com/Azure-Samples/dotnet_sample |
 | Node       | [node.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/node.js-webapp-on-azure.yml) | https://github.com/Azure-Samples/node_express_app |
 | Java | [java_jar.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/java-jar-webapp-on-azure.yml) |https://github.com/Azure-Samples/java-spring-petclinic |
-| Java      | [java_war.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/java-war-webapp-on-azure.yml) ||
+| Java      | [java_war.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/java-war-webapp-on-azure.yml) |https://github.com/Azure-Samples/Java-application-petstore-ee7|
 | Python     | [python.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/python-webapp-on-azure.yml) | https://github.com/Azure-Samples/pythonSample_thecatsaidno|
 | DOCKER     | [docker.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/docker-webapp-container-on-azure.yml) | https://github.com/Azure-Samples/Node_express_container|
 
