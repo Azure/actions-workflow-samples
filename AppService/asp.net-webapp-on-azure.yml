@@ -36,9 +36,7 @@ jobs:
   
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.0
-      with:
-        vs-version: "[16.4,16.5]"  #Version of Visual Studio to search; defaults to latest if not specified
-
+    
     - name: Run MSBuild
       run: msbuild .\SampleWebApplication.sln
        
