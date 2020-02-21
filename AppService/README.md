@@ -28,7 +28,8 @@ Once login is done, the next set of Actions in the workflow can perform tasks su
 
 |  Runtime | Template |Sample Code|
 |------------|---------|---------|
-| DotNet     | [dotnet.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/asp.net-core-webapp-on-azure.yml) | https://github.com/Azure-Samples/dotnet_sample |
+| DotNet     | [dotnet.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/asp.net-webapp-on-azure.yml) | https://github.com/Azure-Samples/dotnet-sample |
+| DotNet Core    | [dotnet_core.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/asp.net-core-webapp-on-azure.yml) | https://github.com/Azure-Samples/dotnet_core_sample |
 | Node       | [node.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/node.js-webapp-on-azure.yml) | https://github.com/Azure-Samples/node_express_app |
 | Java | [java_jar.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/java-jar-webapp-on-azure.yml) |https://github.com/Azure-Samples/java-spring-petclinic |
 | Java      | [java_war.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/java-war-webapp-on-azure.yml) |https://github.com/Azure-Samples/Java-application-petstore-ee7|
