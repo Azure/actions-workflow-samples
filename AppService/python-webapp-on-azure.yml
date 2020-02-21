@@ -1,4 +1,4 @@
-name: Build and Deploy Python package to Azure Web App
+name: Deploy Python package to Azure Web App
 
 on:
   [push]
@@ -13,6 +13,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: Python-thecatsaidno # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'         # set this to the path to your web app project, defaults to the repository root
+  PYTHON_VERSION: '3.7'                  # set this to the python version to use
 
 jobs:
   build:
@@ -20,8 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Building web app
-      uses: azure/appservice-build@v1
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
     - name: Deploy Web App using GH Action azure/webapps-deploy
       uses: azure/webapps-deploy@v1
       with:
@@ -29,4 +36,4 @@ jobs:
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-  # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
