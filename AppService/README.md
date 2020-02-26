@@ -1,8 +1,6 @@
 # Action Samples for deploying to Azure Web apps 
 
-With [`Azure/webapps-deploy`](https://github.com/Azure/webapps-deploy) action, you can automate your workflow to deploy to [Azure Web Apps](https://azure.microsoft.com/en-us/services/app-service/web/).
-
-If you are looking for a Github Action to deploy your containerized apps, use [`webapps-container-deploy`](https://github.com/Azure/webapps-container-deploy) action.
+With [`Azure/webapps-deploy`](https://github.com/Azure/webapps-deploy) action, you can automate your workflows to deploy to [Azure Web Apps](https://azure.microsoft.com/en-us/services/app-service/web/) and [Azure Web App for Containers](https://azure.microsoft.com/en-us/services/app-service/containers/).
 
 Also use [`Azure/appservice-settings`](https://github.com/Azure/appservice-settings) to configure App settings, connection strings and other general settings in bulk using JSON syntax on your Azure WebApp (Windows or Linux) or any of its deployment slots.
 
@@ -118,7 +116,7 @@ jobs:
         docker build . -t contoso.azurecr.io/nodejssampleapp:${{ github.sha }}
         docker push contoso.azurecr.io/nodejssampleapp:${{ github.sha }} 
       
-    - uses: azure/webapps-container-deploy@v1
+    - uses: azure/webapps-deploy@v2
       with:
         app-name: 'node-rnc'
         images: 'contoso.azurecr.io/nodejssampleapp:${{ github.sha }}'
