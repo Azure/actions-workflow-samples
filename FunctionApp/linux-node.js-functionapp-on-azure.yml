@@ -30,9 +30,7 @@ jobs:
     - name: 'Resolve Project Dependencies Using Npm'
       shell: bash
       run: |
-        # If your function app project is not located in your repository's root
-        # Please change your directory for npm in pushd
-        pushd .
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         npm install
         npm run build --if-present
         npm run test --if-present

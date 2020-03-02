@@ -31,8 +31,6 @@ jobs:
     - name: 'Restore Project Dependencies Using Mvn'
       shell: bash
       run: |
-        # If your function app project is not located in your repository's root
-        # Please change your directory for maven build in pushd
         pushd './${{ env.POM_XML_DIRECTORY }}'
         mvn clean package
         mvn azure-functions:package
