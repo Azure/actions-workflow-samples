@@ -18,7 +18,7 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@master
@@ -29,7 +29,7 @@ jobs:
         java-version: ${{ env.JAVA_VERSION }}
 
     - name: 'Restore Project Dependencies Using Mvn'
-      shell: pwsh
+      shell: bash
       run: |
         pushd './${{ env.POM_XML_DIRECTORY }}'
         mvn clean package

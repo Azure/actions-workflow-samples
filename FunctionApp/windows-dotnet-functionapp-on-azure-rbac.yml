@@ -1,4 +1,4 @@
-name: Deploy DotNet project to Azure Function App
+name: Windows_Dotnet_Workflow
 
 on:
   [push]
@@ -6,8 +6,8 @@ on:
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
 #
-# 1. Set up the following secrets in your repository:
-#   AZURE_FUNCTIONAPP_PUBLISH_PROFILE
+# 1. Paste the RBAC json into the following secret in your repository:
+#   AZURE_RBAC_CREDENTIALS
 #
 # 2. Change these variables for your configuration:
 env:
@@ -17,18 +17,23 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@master
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
 
     - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: 'Resolve Project Dependencies Using Dotnet'
-      shell: bash
+    - name: 'Run dotnet'
+      shell: pwsh
       run: |
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         dotnet build --configuration Release --output ./output
@@ -40,6 +45,5 @@ jobs:
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
 
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
