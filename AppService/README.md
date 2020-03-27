@@ -18,11 +18,20 @@ Also use [`Azure/appservice-settings`](https://github.com/Azure/appservice-setti
 * To build and deploy a containerized app, use [docker-login](https://github.com/Azure/docker-login) to log in to a private container registry such as [Azure Container registry](https://azure.microsoft.com/en-us/services/container-registry/). 
 Once login is done, the next set of Actions in the workflow can perform tasks such as building, tagging and pushing containers. 
   
-## Create Azure Web App and deploy using GitHub Actions
-1. Follow the tutorial [Azure Web Apps Quickstart](https://docs.microsoft.com/en-us/azure/app-service/overview#next-steps)
-2. Pick a template from the following table depends on your Azure web app **runtime** and place the template to `.github/workflows/` in your project repository.
-3. Change `app-name` to your Web app name.
-4. Commit and push your project to GitHub repository, you should see a new GitHub Action initiated in **Actions** tab.
+## Deploy a webapp using GitHub Actions
+
+### Get code
+
+If you already have an app in GitHub that you want to deploy, you can create a workflow for that code. If you are a new user, choose from the below table, a sample code repo based on **runtime** and fork in GitHub.
+
+### Create Azure Web App 
+Provision a web app by following the tutorial [Azure Web Apps Quickstart](https://docs.microsoft.com/en-us/azure/app-service/overview#next-steps)
+
+### Choose a sample workflow template
+1. Pick a template from the below table depending on your Azure web app **runtime** and place the template to `.github/workflows/` in your project repository.
+2. Change `app-name` to your Web app name.
+3. Commit and push your project to GitHub repository, you should see a new GitHub Action initiated in **Actions** tab.
+ 
 
 |  Runtime | Template |Sample Code|
 |------------|---------|---------|
