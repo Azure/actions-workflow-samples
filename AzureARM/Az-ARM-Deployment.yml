@@ -28,8 +28,8 @@ jobs:
       uses: actions/checkout@v1
         
     # Deployment of template
-    - name: Azure CLI script to deploy an ARM Template
-      uses: azure/CLI@v1
+    - name: Deploy ARM Template
+      uses: azure/ARM@v1
       with:
         azcliversion: latest
         inlineScript: |
