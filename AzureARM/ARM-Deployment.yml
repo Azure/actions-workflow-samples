@@ -6,7 +6,8 @@ on: push
 #
 # Set up the following secrets in your repository:
 #   AZURE_CREDENTIALS
-# 2. Change these variables for your configuration:
+# Change these variables for your configuration:
+#   AZURE_RESOURCE_GROUP, AZURE_LOCATION
 
 env:
   AZURE_RESOURCE_GROUP: ActionsDemo   # set this to your Azure Resource group's name  
