@@ -30,9 +30,30 @@ jobs:
         
     # Deployment of template
     - name: Deploy ARM Template
-      uses: azure/ARM@v1
+      uses: azure/cli@v1.0.3
       with:
         azcliversion: latest
         inlineScript: |
           az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}
           az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json
+
+# The inline CLI Script needs to be copied into the yml by the user.
+#
+# The script for creation of resource group, in case it is not present:
+# az group create --location $Replace_this_with_the_location --name $Replace_this_with_the_resource_group
+#
+# The script for deployment of ARM Template present in the local directory
+# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-file $Replace_this_with_the_template_location
+#
+# The script for deployment of ARM Template from a remote loaction (URI is known)
+# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-uri $Replace_this_with_the_template_URI
+#
+# The script for deployment of ARM Template with parameters file
+# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-uri $Replace_this_with_the_template_URI --parameters $Replace_this_with_parameter_file
+#
+# For other examples on usage of CLI Commands to manage the resources, please refer to the following page:
+# https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
+
+
+
+
