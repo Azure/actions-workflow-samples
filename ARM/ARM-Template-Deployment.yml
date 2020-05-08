@@ -30,7 +30,7 @@ jobs:
         
     # Deployment of template
     - name: Deploy ARM Template
-      uses: azure/cli@v1.0.3
+      uses: azure/CLI@v1
       with:
         azcliversion: latest
         inlineScript: |
