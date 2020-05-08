@@ -37,7 +37,7 @@ jobs:
           az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}
           az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json
 
-# The inline CLI Script needs to be copied into the yml by the user.
+# The inline CLI Script needs to be copied into the yml by the user. Some of the commonly used scripts are listed below:
 #
 # The script for creation of resource group, in case it is not present:
 # az group create --location $Replace_this_with_the_location --name $Replace_this_with_the_resource_group
@@ -53,7 +53,3 @@ jobs:
 #
 # For other examples on usage of CLI Commands to manage the resources, please refer to the following page:
 # https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
-
-
-
-
