@@ -21,6 +21,6 @@ jobs:
     - name: Run Azure PowerShell script
       uses: azure/powershell@v1
       with:
+        azPSVersion: '3.1.0'
         inlineScript: |
           Get-AzVM -ResourceGroupName "ActionsDemo"
-          azPSVersion: '3.1.0'
