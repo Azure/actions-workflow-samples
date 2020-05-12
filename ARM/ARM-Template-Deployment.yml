@@ -55,10 +55,9 @@ jobs:
 # az group deployment create --resource-group $Replace_this_with_the_resource_group --template-uri $Replace_this_with_the_template_URI --parameters $Replace_this_with_parameter_file
 #
 # In order to update the resource group with new Resources without deleting the existing ones, --mode option can be used. 
-# The accepted values are Incremental (only add resources to resource group) or Complete (remove extra resources from resource group).
-# Default value is Incremental
+# The accepted values are Incremental (only add resources to resource group) or Complete (remove extra resources from resource group). Default value is Incremental
 # The script for using the mode option
-# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-file $Replace_this_with_the_template_location --mode Incremental
+# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-file $Replace_this_with_the_template_location --mode Complete
 # 
 # To delete a resource group from the subscription, use the following script
 # az group deployment delete --name $Replace_this_with_deployment_name --resource-group $Replace_this_with_the_resource_group
