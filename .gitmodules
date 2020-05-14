@@ -4,3 +4,9 @@
 [submodule "Kubernetes/RockPaperScissorsLizardSpock"]
 	path = Kubernetes/RockPaperScissorsLizardSpock
 	url = https://github.com/microsoft/RockPaperScissorsLizardSpock
+[submodule "MachineLearning/ml-template-azure"]
+	path = MachineLearning/ml-template-azure
+	url = https://github.com/machine-learning-apps/ml-template-azure.git
+[submodule "MachineLearning/aml-template"]
+	path = MachineLearning/aml-template
+	url = https://github.com/Azure/aml-template.git
