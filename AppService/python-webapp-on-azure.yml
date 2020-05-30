@@ -11,7 +11,7 @@ on:
 #
 # 2. Change these variables for your configuration:
 env:
-  AZURE_WEBAPP_NAME: Python-thecatsaidno # set this to your application's name
+  AZURE_WEBAPP_NAME: noob-investors-web # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'         # set this to the path to your web app project, defaults to the repository root
   PYTHON_VERSION: '3.7'                  # set this to the python version to use
 
