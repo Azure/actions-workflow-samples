@@ -15,7 +15,7 @@ jobs:
                 
     # Authentication
     # Set up the following secrets in your repository: AZURE_CREDENTIALS
-    # For details on usage of environment variables and secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-variables-and-secrets-in-a-workflow
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
     - name: Azure Login
       uses: azure/login@v1
       with:
@@ -32,7 +32,7 @@ jobs:
         azcliversion: latest
         inlineScript: |
         # You can change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION 
-        # For details on usage of environment variables and secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-variables-and-secrets-in-a-workflow
+        # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
         # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
           az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}   
           az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json
