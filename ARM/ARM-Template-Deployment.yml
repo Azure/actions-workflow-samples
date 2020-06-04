@@ -4,7 +4,6 @@ on: push
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
 
-
 env:
   AZURE_RESOURCE_GROUP: ActionsDemo   # set this to your Azure Resource group's name  
   AZURE_LOCATION: WestEurope  # set this to your Location Name 
@@ -27,17 +26,17 @@ jobs:
       uses: actions/checkout@v1
         
     # Deployment of template    
-    # Change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION
-    # For details on usage of environment variables and secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-variables-and-secrets-in-a-workflow
     - name: Deploy ARM Template
       uses: azure/CLI@v1
       with:
         azcliversion: latest
         inlineScript: |
+        # You can change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION 
+        # For details on usage of environment variables and secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-variables-and-secrets-in-a-workflow
+        # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
           az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}   
-        # Ex az group create -l westus -n MyResourceGroup
           az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json
-        # Refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create for details on the command
+        # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
 
 
 # The inline CLI Script needs to be copied into the yml by the user. 
