@@ -3,12 +3,7 @@ on: push
 
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
-#
-# Set up the following secrets in your repository:
-#   AZURE_CREDENTIALS
-# Change these environment variables for your configuration:
-#   AZURE_RESOURCE_GROUP, AZURE_LOCATION
-# For details on usage of environment variables and secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-variables-and-secrets-in-a-workflow
+
 
 env:
   AZURE_RESOURCE_GROUP: ActionsDemo   # set this to your Azure Resource group's name  
@@ -20,6 +15,8 @@ jobs:
     steps:
                 
     # Authentication
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # For details on usage of environment variables and secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-variables-and-secrets-in-a-workflow
     - name: Azure Login
       uses: azure/login@v1
       with:
@@ -29,14 +26,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
         
-    # Deployment of template
+    # Deployment of template    
+    # Change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION
+    # For details on usage of environment variables and secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-variables-and-secrets-in-a-workflow
     - name: Deploy ARM Template
       uses: azure/CLI@v1
       with:
         azcliversion: latest
         inlineScript: |
-          az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}
+          az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}   
+        # Ex az group create -l westus -n MyResourceGroup
           az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json
+        # Refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create for details on the command
+
 
 # The inline CLI Script needs to be copied into the yml by the user. 
 # Ensure that the environment variables are set in the yml files. As an alternate, exact Resource Gropu names and Location can pe provided.
