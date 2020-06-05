@@ -1,4 +1,4 @@
-name: workflow to deploy an ARM Template using CLI commands
+name: workflow to deploy an ARM Template to a resource group using CLI commands
 on: push
 
 # CONFIGURATION
@@ -35,7 +35,7 @@ jobs:
         # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
         # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
           az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}   
-          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json
+          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $Replace_this_with_parameter_file
         # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
 
 
