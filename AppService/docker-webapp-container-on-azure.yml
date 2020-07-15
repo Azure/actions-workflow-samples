@@ -22,7 +22,7 @@ jobs:
     - name: Azure authentication
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 #     - name: Azure CLI script to provision a new Web App for Container
 #       uses: azure/CLI@v0-beta
 #       with:
