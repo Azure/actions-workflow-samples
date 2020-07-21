@@ -1,0 +1,8 @@
+{
+    "name": "ASP.NET MVC Web App to Azure",
+    "description": "Deploy ASP.NET MVC Web App to Azure App Service",
+    "iconName": "azure",
+    "categories": [
+        "ASP" , "Deployment"
+    ]
+}

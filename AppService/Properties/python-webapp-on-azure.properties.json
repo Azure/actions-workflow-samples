@@ -1,0 +1,8 @@
+{
+    "name": "Python Web App to Azure",
+    "description": "Deploy Python app to Azure App Service",
+    "iconName": "azure",
+    "categories": [
+        "Python" , "Deployment"
+    ]
+}
