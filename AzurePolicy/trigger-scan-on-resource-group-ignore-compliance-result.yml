@@ -1,3 +1,7 @@
+# This workflow triggers an azure policy compliance scan on the resource group. 
+# Waits till the scan is complete and displays the latest compliance state of resources in logs and uploads a compliance report in form of a CSV file.# 
+# The compliance scan action will pass irrespective of the compliance status of scanned resources
+
 name: scan-rg-ignore-compliance-status
 on: push
 
