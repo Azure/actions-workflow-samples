@@ -1,6 +1,6 @@
-# This workflow triggers an azure policy compliance scan on the subscription. 
+# This workflow triggers an azure policy compliance scan on multiple subscription. 
 # Progresses successfully to the next step without waiting.
-name: scan-subscription-no-wait
+name: scan-subscriptions-no-wait
 on: push
 
 jobs:
@@ -18,4 +18,5 @@ jobs:
       with:
         scopes: |
           /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          /subscriptions/########-####-####-####-############
         wait: false
