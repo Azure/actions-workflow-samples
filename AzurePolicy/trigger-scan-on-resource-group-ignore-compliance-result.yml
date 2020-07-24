@@ -1,4 +1,4 @@
-name: scan-subscription-no-wait
+name: scan-rg-ignore-compliance-status
 on: push
 
 jobs:
