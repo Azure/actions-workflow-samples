@@ -1,3 +1,5 @@
+# This workflow triggers an azure policy compliance scan on the subscription. 
+# Progresses successfully to the next step without waiting.
 name: scan-subscription-no-wait
 on: push
 
