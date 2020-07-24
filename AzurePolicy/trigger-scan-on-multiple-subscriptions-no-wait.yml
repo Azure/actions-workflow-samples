@@ -19,5 +19,5 @@ jobs:
         scopes: |
           /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
           /subscriptions/########-####-####-####-############/resourceGroups/my-resource-group
-          /subscriptions/@@@@@@@@-@@@@-@@@@-@@@@-@@@@@@@@@@@@/resourceGroups/my-resource-group/providers/Microsoft.Web/sites/zenithWorksApp     
+          /subscriptions/@@@@@@@@-@@@@-@@@@-@@@@-@@@@@@@@@@@@/resourceGroups/my-new-resource-group/providers/Microsoft.Web/sites/zenithWorksApp     
         wait: false
