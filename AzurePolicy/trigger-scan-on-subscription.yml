@@ -1,3 +1,6 @@
+# This workflow triggers an azure policy compliance scan on the subscription. 
+# Waits till the scan is complete and displays the latest compliance state of resources in logs. 
+# Also generates the compliance report in form of a CSV file and uploads it as an artifact of this workflow run.
 name: scan-subscription
 on: push
 
