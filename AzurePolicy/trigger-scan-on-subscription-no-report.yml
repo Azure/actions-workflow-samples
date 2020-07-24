@@ -1,4 +1,9 @@
-name: scan-subscription
+# This workflow triggers an azure policy compliance scan on the subscription. 
+# Waits till the scan is complete and displays the latest compliance state of resources in logs.
+# The compliance scan action will fail if there are non-compliant resources found( Use 'scopes-ignore' input to ignore the compliance status of  resources )
+# The compliance scan action will not upload a report to the workflow run
+
+name: scan-subscription-without-report
 on: push
 
 jobs:
