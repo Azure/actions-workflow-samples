@@ -1,5 +1,5 @@
-# This workflow triggers an azure policy compliance scan on multiple subscription. 
-# Progresses successfully to the next step without waiting.
+# This workflow triggers an azure policy compliance scan on multiple subscriptions, resource groups and resources
+# The compliance scan action will progress successfully to the next step without waiting.
 name: scan-subscriptions-no-wait
 on: push
 
@@ -18,5 +18,6 @@ jobs:
       with:
         scopes: |
           /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-          /subscriptions/########-####-####-####-############
+          /subscriptions/########-####-####-####-############/resourceGroups/my-resource-group
+          /subscriptions/@@@@@@@@-@@@@-@@@@-@@@@-@@@@@@@@@@@@/resourceGroups/my-resource-group/providers/Microsoft.Web/sites/zenithWorksApp     
         wait: false
