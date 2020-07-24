@@ -1,0 +1,8 @@
+{
+    "name": "Python Serverless App to Azure",
+    "description": "Deploy Python app to Azure Functions",
+    "iconName": "azure",
+    "categories": [
+        "Python" , "Deployment"
+    ]
+}

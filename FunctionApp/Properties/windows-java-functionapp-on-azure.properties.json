@@ -1,0 +1,8 @@
+{
+    "name": "Java Serverless App to Azure",
+    "description": "Deploy Java App to Azure Functions",
+    "iconName": "azure",
+    "categories": [
+        "java" ,"Maven" , "Deployment"
+    ]
+}
