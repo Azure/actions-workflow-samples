@@ -1,0 +1,19 @@
+name: scan-subscription
+on: push
+
+jobs:
+  assess-policy-compliance:    
+    runs-on: ubuntu-latest
+    steps:
+    # Azure Login       
+    - name: Login to Azure
+      uses: azure/login@v1.1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}} 
+    
+    - name: Check for resource compliance
+      uses: azure/policy-compliance-scan@v0
+      with:
+        scopes: |
+          /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        skip-report: true
