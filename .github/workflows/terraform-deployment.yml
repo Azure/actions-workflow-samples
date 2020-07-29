@@ -20,8 +20,7 @@ jobs:
 
       - uses: azure/login@v1.1
         with:
-          Username: ${{ secrets.TF_VAR_agent_client_id }}
-          Password: ${{ secrets.TF_VAR_agent_client_secret }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Format"
         uses: hashicorp/terraform-github-actions@master
