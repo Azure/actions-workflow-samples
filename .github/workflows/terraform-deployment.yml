@@ -17,6 +17,12 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@master
+
+      - uses: azure/login@v1.1
+        with:
+          Username: ${{ secrets.TF_VAR_agent_client_id }}
+          Password: ${{ secrets.TF_VAR_agent_client_secret }}
+
       - name: "Terraform Format"
         uses: hashicorp/terraform-github-actions@master
         with:
