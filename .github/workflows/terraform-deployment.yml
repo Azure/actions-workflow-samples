@@ -1,0 +1,72 @@
+name: "Terraform Deploy"
+on:
+  push:
+    branches:
+      - master
+
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+
+env:
+  TF_VER: 0.12.25
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@master
+      - name: "Terraform Format"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: ${{ env.TF_VER }}
+          tf_actions_subcommand: "fmt"
+          tf_actions_working_dir: "./terraform2"
+          tf_actions_comment: true
+        env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Terraform Init"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: ${{ env.TF_VER }}
+          tf_actions_subcommand: "init"
+          tf_actions_working_dir: "./terraform2"
+          tf_actions_comment: true
+        env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Terraform Validate"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: ${{ env.TF_VER }}
+          tf_actions_subcommand: "validate"
+          tf_actions_working_dir: "./terraform2"
+          tf_actions_comment: true
+        env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Terraform Plan"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: ${{ env.TF_VER }}
+          tf_actions_subcommand: "plan"
+          tf_actions_working_dir: "./terraform2"
+          tf_actions_comment: true
+        env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_VAR_agent_client_id: ${{ secrets.TF_VAR_agent_client_id }}
+          TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
+          TF_VAR_subscription_id: ${{ secrets.TF_VAR_subscription_id }}
+          TF_VAR_tenant_id: ${{ secrets.TF_VAR_tenant_id }}
+      - name: "Terraform Apply"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: ${{ env.TF_VER }}
+          tf_actions_subcommand: "apply"
+          tf_actions_working_dir: "./terraform2"
+          tf_actions_comment: true
+        env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_VAR_agent_client_id: ${{ secrets.TF_VAR_agent_client_id }}
+          TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
+          TF_VAR_subscription_id: ${{ secrets.TF_VAR_subscription_id }}
+          TF_VAR_tenant_id: ${{ secrets.TF_VAR_tenant_id }}
