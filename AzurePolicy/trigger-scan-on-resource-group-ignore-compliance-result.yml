@@ -1,0 +1,24 @@
+# This workflow triggers an azure policy compliance scan on the resource group. 
+# Waits till the scan is complete and displays the latest compliance state of resources in logs and uploads a compliance report in form of a CSV file.# 
+# The compliance scan action will pass irrespective of the compliance status of scanned resources
+
+name: scan-rg-ignore-compliance-status
+on: push
+
+jobs:
+  assess-policy-compliance:    
+    runs-on: ubuntu-latest
+    steps:
+    # Azure Login       
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}} 
+    
+    - name: Check for resource compliance
+      uses: azure/policy-compliance-scan@v0
+      with:
+        scopes: |
+          /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/my-Resource-Group/
+        scopes-ignore: all
+        

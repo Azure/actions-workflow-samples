@@ -1,0 +1,23 @@
+# This workflow triggers an azure policy compliance scan on multiple subscriptions, resource groups and resources
+# The compliance scan action will progress successfully to the next step without waiting.
+name: scan-subscriptions-no-wait
+on: push
+
+jobs:
+  assess-policy-compliance:    
+    runs-on: ubuntu-latest
+    steps:
+    # Azure Login       
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}} 
+    
+    - name: Check for resource compliance
+      uses: azure/policy-compliance-scan@v0
+      with:
+        scopes: |
+          /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          /subscriptions/########-####-####-####-############/resourceGroups/my-resource-group
+          /subscriptions/@@@@@@@@-@@@@-@@@@-@@@@-@@@@@@@@@@@@/resourceGroups/my-new-resource-group/providers/Microsoft.Web/sites/zenithWorksApp     
+        wait: false

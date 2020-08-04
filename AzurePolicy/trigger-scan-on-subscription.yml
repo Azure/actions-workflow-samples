@@ -1,0 +1,23 @@
+# This workflow triggers an azure policy compliance scan on the subscription. 
+# Waits till the scan is complete and displays the latest compliance state of resources in logs.
+# Also generates the compliance report in form of a CSV file and uploads it as an artifact of this workflow run.
+# The action will fail if there are non-compliant resources found( Use 'scopes-ignore' input to ignore the compliance status of  resources )
+name: scan-subscription
+on: push
+
+jobs:
+  assess-policy-compliance:    
+    runs-on: ubuntu-latest
+    steps:
+    # Azure Login       
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}} 
+    
+    - name: Check for resource compliance
+      uses: azure/policy-compliance-scan@v0
+      with:
+        scopes: |
+          /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        
