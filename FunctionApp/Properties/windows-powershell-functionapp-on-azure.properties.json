@@ -1,0 +1,8 @@
+{
+    "name": "Windows PowerShell based Serverless App to Azure",
+    "description": "Deploy Windows PowerShell app to Azure Functions",
+    "iconName": "azure",
+    "categories": [
+        "ASP", "Deployment"
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "name": "ASP.NET Core Serverless App to Azure",
+    "description": "Deploy ASP.NET Core app to Azure Functions using a Publish Profile",
+    "iconName": "azure",
+    "categories": [
+        "ASP", "Deployment"
+    ]
+}

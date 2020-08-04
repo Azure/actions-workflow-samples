@@ -1,0 +1,8 @@
+{
+    "name": "Java Web App to Azure",
+    "description": "Deploy Java War package to Azure App Service",
+    "iconName": "azure",
+    "categories": [
+        "java" ,"Maven" , "Deployment"
+    ]
+}

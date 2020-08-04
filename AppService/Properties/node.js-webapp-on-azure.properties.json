@@ -1,0 +1,8 @@
+{
+    "name": "Node.js Web App to Azure",
+    "description": "Deploy Node.js app to Azure App Service",
+    "iconName": "azure",
+    "categories": [
+        "node" , "Deployment"
+    ]
+}
