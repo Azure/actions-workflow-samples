@@ -23,6 +23,8 @@ These workflow samples to automate your deployment workflows targeting various A
 
 - [**/AzureCLI**](https://github.com/Azure/actions-workflow-samples/tree/master/AzureCLI) Samples to run Azure CLI sripts to provision and manage Azure resources from a GitHub Action workflow
 
+- [**/AzurePolicy**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePolicy) Samples to trigger on-demand Azure Policy compliance scans from a GitHub Action workflow
+
 **Naming Notation:**
 * `os-ecosystem-ServiceName-on-azure`: example, linux-container-functionapp-on-azure.yml
 * OS in the name is optional if the action workflow sample is OS agnostic and doesnt significantly change between OS (Linux/Windows) 
