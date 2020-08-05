@@ -1,8 +1,11 @@
-name: trigger_scan_on_scope_secret
+name: trigger_scan_on_scope
 on:
   push:
     paths:
-    - '**trigger-scan-on-scope-secret.yml'
+    - '**trigger-scan-on-scope.yml'
+
+env:
+  SCAN_SCOPE: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx    # set this to the scope that is to be scanned. It can be a Subscription, Resource group or a resource
 
 jobs:
   assess-policy-compliance:    
@@ -17,4 +20,4 @@ jobs:
     - name: Check for resource compliance
       uses: azure/policy-compliance-scan@v0
       with:
-        scopes: ${{secrets.SCAN_SCOPE}}
+        scopes: ${{env.SCAN_SCOPE}}
