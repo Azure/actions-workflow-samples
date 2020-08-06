@@ -8,7 +8,7 @@ on:
 # For help, go to https://github.com/Azure/Actions
 
 env:
-  TF_VER: 0.12.25
+  TF_VER: 0.12.29
 
 jobs:
   terraform:
