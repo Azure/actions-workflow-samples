@@ -18,11 +18,6 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@master
 
-      - name: "Azure Login"
-        uses: azure/login@v1.1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: "Terraform Format"
         uses: hashicorp/terraform-github-actions@master
         with:
