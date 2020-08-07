@@ -4,6 +4,22 @@
 
 You use Azure starter templates present in this repo to easily create GitHub CI/CD workflows targeting Azure, to deploy your apps created with popular languages and frameworks such as .NET, Node.js, Java, PHP, Ruby or Python, in containers or running on any operating system.
 
+## Share these workflow templates within your GitHub organization
+
+You can now leverage the workflow templates present in this repo and standardize the getting started experience for your Organization members in just two steps. 
+The templates can then be used by organization members who have permission to create workflows.
+
+1. Fork this repo of "Azure/actions-workflow-samples" repo into your GH organisation. 
+2. Rename the repo as “.github” folder.
+
+### Using a workflow template
+This procedure demonstrates how a member of your organization can find and use a workflow template to create a new workflow. An organization's workflow templates can be used by anyone who is a member of the organization.
+
+1. On GitHub, navigate to the main page of the repository.
+2. Under your repository name, click **Actions** tab.
+3. If your repository already has existing workflows: In the upper-left corner, click **New workflow**.
+4. Your organization's workflow templates are located in their own section titled "Workflows created by *organization name*". Under the name of the template you'd like to use, click **Set up this workflow**.
+
 ## Guidelines to select/author a new sample workflow
 
 **Folder Structure:**
