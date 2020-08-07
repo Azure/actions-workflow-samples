@@ -1,0 +1,55 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "rpsls-web.fullname" . -}}
+{{- $ingressPath := .Values.inf.ingress.web.path -}}
+{{- $uploaderPath := .Values.inf.ingress.web.uploaderPath -}}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ template "rpsls-web.name" . }}
+    chart: {{ template "rpsls-web.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- with .Values.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- if and .Values.inf.web.scale.enabled (not .Values.inf.web.signalr) }}  
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+{{- end }}
+{{- if .Values.uploaderEnabled }}
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+{{- end }}
+spec:
+{{- if .Values.ingress.tlsEnabled }}
+  tls:
+  {{- range .Values.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+        - path: {{ $ingressPath }}
+          backend:
+            serviceName: web
+            servicePort: http
+{{- if $.Values.uploaderEnabled }}
+        - path: {{ $uploaderPath }}
+          backend:
+            serviceName: web
+            servicePort: uploader
+{{- end }}
+  {{- end }}
+{{- end }}

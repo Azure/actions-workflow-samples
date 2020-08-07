@@ -1,0 +1,129 @@
+version: '3.2'
+services:
+  config:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-config
+    ports:
+      - 8888:8888
+    restart: always
+    labels:
+      kompose.service.type: LoadBalancer
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  registry:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-registry
+    restart: always
+    depends_on:
+      - config
+    ports:
+      - 8761:8761
+    labels:
+      kompose.service.type: LoadBalancer
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  gateway:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-gateway
+    restart: always
+    depends_on:
+      - config
+    ports:
+      - 80:4000
+    labels:
+      kompose.service.type: LoadBalancer
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  auth-service:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      NOTIFICATION_SERVICE_PASSWORD: $NOTIFICATION_SERVICE_PASSWORD
+      STATISTICS_SERVICE_PASSWORD: $STATISTICS_SERVICE_PASSWORD
+      ACCOUNT_SERVICE_PASSWORD: $ACCOUNT_SERVICE_PASSWORD
+      MONGODB_DATABASE: $MONGODB_DATABASE
+      MONGODB_URI: $MONGODB_URI
+    image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-auth-service
+    ports:
+      - 5000
+    restart: always
+    depends_on:
+      - config
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  account-service:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      ACCOUNT_SERVICE_PASSWORD: $ACCOUNT_SERVICE_PASSWORD
+      MONGODB_DATABASE: $MONGODB_DATABASE
+      RABBITMQ_HOST: $RABBITMQ_HOST
+      RABBITMQ_PORT: $RABBITMQ_PORT
+      RABBITMQ_USERNAME: $RABBITMQ_USERNAME
+      RABBITMQ_PASSWORD: $RABBITMQ_PASSWORD
+      MONGODB_URI: $MONGODB_URI
+    image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-account-service
+    ports:
+      - 6000
+    restart: always
+    depends_on:
+      - config
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  statistics-service:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      STATISTICS_SERVICE_PASSWORD: $STATISTICS_SERVICE_PASSWORD
+      MONGODB_DATABASE: $MONGODB_DATABASE
+      RABBITMQ_HOST: $RABBITMQ_HOST
+      RABBITMQ_PORT: $RABBITMQ_PORT
+      RABBITMQ_USERNAME: $RABBITMQ_USERNAME
+      RABBITMQ_PASSWORD: $RABBITMQ_PASSWORD
+      MONGODB_URI: $MONGODB_URI
+    image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-statistics-service
+    ports:
+      - 7000
+    restart: always
+    depends_on:
+      - config
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  notification-service:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      NOTIFICATION_SERVICE_PASSWORD: $NOTIFICATION_SERVICE_PASSWORD
+      MONGODB_DATABASE: $MONGODB_DATABASE
+      RABBITMQ_HOST: $RABBITMQ_HOST
+      RABBITMQ_PORT: $RABBITMQ_PORT
+      RABBITMQ_USERNAME: $RABBITMQ_USERNAME
+      RABBITMQ_PASSWORD: $RABBITMQ_PASSWORD
+      MONGODB_URI: $MONGODB_URI
+    image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-notification-service
+    ports:
+      - 8000
+    restart: always
+    depends_on:
+      - config
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"

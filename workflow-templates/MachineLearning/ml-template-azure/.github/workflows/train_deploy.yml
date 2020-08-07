@@ -1,0 +1,55 @@
+# Actions train a model on Azure Machine Learning
+name: aml-train-deploy-workflow 
+on:
+  push:
+    branches:
+      - master
+    # paths:
+    #   - 'code/*'
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Check Out Repository
+      id: checkout_repository
+      uses: actions/checkout@v2
+        
+    # Connect or Create the Azure Machine Learning Workspace
+    - name: Connect/Create Azure Machine Learning Workspace
+      id: aml_workspace
+      uses: Azure/aml-workspace@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # Connect or Create a Compute Target in Azure Machine Learning
+    - name: Connect/Create Azure Machine Learning Compute Target
+      id: aml_compute_training
+      uses: Azure/aml-compute@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # Submit a training run to the Azure Machine Learning
+    - name: Submit training run
+      id: aml_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Register model in Azure Machine Learning model registry
+    - name: Register model
+      id: aml_registermodel
+      uses: Azure/aml-registermodel@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          run_id:  ${{ steps.aml_run.outputs.run_id }}
+          experiment_name: ${{ steps.aml_run.outputs.experiment_name }}
+
+    # Deploy model in Azure Machine Learning to ACI
+    - name: Deploy model
+      id: aml_deploy
+      uses: Azure/aml-deploy@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
+          model_version: ${{ steps.aml_registermodel.outputs.model_version }}

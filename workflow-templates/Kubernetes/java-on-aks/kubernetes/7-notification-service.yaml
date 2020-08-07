@@ -1,0 +1,109 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    project: piggymetrics
+    tier: backend
+    app: notification-service
+  name: notification-service
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+  selector:
+    project: piggymetrics
+    tier: backend
+    app: notification-service
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    project: piggymetrics
+    tier: backend
+    app: notification-service
+  name: notification-service
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        project: piggymetrics
+        tier: backend
+        app: notification-service
+    spec:
+      containers:
+      - env:
+        - name: CONFIG_SERVICE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: config_service_password
+        - name: NOTIFICATION_SERVICE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: notification_service_password
+        - name: NOTIFICATION_EMAIL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: notification_email_host
+        - name: NOTIFICATION_EMAIL_PORT
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: notification_email_port
+        - name: NOTIFICATION_EMAIL_USER
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: notification_email_user
+        - name: NOTIFICATION_EMAIL_PASS
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: notification_email_pass
+        - name: MONGODB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: mongodb_database
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: mongodb_uri
+        - name: RABBITMQ_HOST
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: rabbitmq_host
+        - name: RABBITMQ_PORT
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: rabbitmq_port
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: rabbitmq_username
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: piggymetrics
+              key: rabbitmq_password
+        ports:
+          - containerPort: 8000
+        image: ${CONTAINER_REGISTRY}.azurecr.io/piggymetrics-notification-service:${IMAGE_TAG}
+        name: notification-service
+        resources: {}
+      restartPolicy: Always
+status: {}

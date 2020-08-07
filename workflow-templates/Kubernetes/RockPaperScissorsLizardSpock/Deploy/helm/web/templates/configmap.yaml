@@ -1,0 +1,37 @@
+{{- $name := include "rpsls-web.fullname" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "cfg-{{ $name }}"
+  labels:
+    app: {{ template "rpsls-web.name" . }}
+    chart: {{ template "rpsls-web.chart" .}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  APPINSIGHTS_INSTRUMENTATIONKEY:  {{ .Values.inf.appinsights.id }}
+  GameManager__Url:  {{ .Values.inf.apiurls.gameapiurl }}
+  GameManager__Grpc__GrpcOverHttp: "true"                                # true: web will use http/2 prior knowledge without TLS when using gRPC
+{{- if .Values.inf.googleanalytics.id }}
+  GoogleAnalytics: {{ .Values.inf.googleanalytics.id }}
+{{- end -}}
+{{- if .Values.auth.twitter.key }}
+  Authentication__Twitter__ConsumerKey: {{ .Values.auth.twitter.key }}
+{{- end -}}
+{{- if .Values.auth.twitter.secret }}
+  Authentication__Twitter__ConsumerSecret: {{ .Values.auth.twitter.secret }}
+{{- end -}}  
+{{- if .Values.inf.web.scale.enabled }}
+{{- if eq .Values.inf.web.scale.dp.provider "internal" -}}
+  DataProtectionProvider: "redis"
+  DataProtectionProviderConstr: webdata
+{{ else }}
+  DataProtectionProvider: {{ .Values.inf.web.scale.dp.provider }}
+  DataProtectionProviderConstr: {{ .Values.inf.web.scale.dp.constr }}
+  DataProtectionProviderName: {{ .Values.inf.web.scale.dp.name }}
+{{- end -}}
+{{- if .Values.inf.web.signalr }}
+  UseSignalR: {{ .Values.inf.web.signalr }}
+{{- end -}}
+{{- end -}}

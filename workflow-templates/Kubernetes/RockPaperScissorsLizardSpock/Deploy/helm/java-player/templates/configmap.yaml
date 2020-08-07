@@ -1,0 +1,16 @@
+{{- $name := include "rpsls-java.fullname" . -}}
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "cfg-{{ $name }}"
+  labels:
+    app: {{ template "rpsls-java.name" . }}
+    chart: {{ template "rpsls-java.chart" .}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  APPLICATION_INSIGHTS_IKEY: {{ .Values.inf.appinsights.id }}
+  APPLICATION_INSIGHTS_ENABLED: {{ if .Values.inf.appinsights.id }}'true'{{ else }}'false'{{ end }}
+  PREDICTOR_URL: {{ .Values.inf.apiurls.predictor }}

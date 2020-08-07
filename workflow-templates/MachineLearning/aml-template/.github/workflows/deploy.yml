@@ -1,0 +1,90 @@
+name: aml-deploy
+
+on:
+  repository_dispatch:
+    types: [deploy-command]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check variables
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload.slash_command) }}
+        run: |
+          if [ -z "${{ github.event.client_payload.slash_command.model_name }}"]; then echo "model_name is NULL"; exit 1; else echo "model_name is ${{ toJson(github.event.client_payload.slash_command.model_name) }}"; fi;
+          if [ -z "${{ github.event.client_payload.slash_command.model_version }}"]; then echo "model_version is NULL"; exit 1; else echo "model_version is ${{ toJson(github.event.client_payload.slash_command.model_version) }}"; fi;
+          
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v2
+
+      - name: Create URL to the run output
+        id: vars
+        run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            @${{ github.event.client_payload.github.actor }} Just submit a deploy request.
+            [Click here to see the deploy run output](${{ steps.vars.outputs.run-url }})
+
+      # Connect or Create the Azure Machine Learning Workspace
+      - name: Connect/Create Azure Machine Learning Workspace
+        id: aml_workspace
+        uses: Azure/aml-workspace@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # # Profile your model (TODO)
+      # - name: Profile Model
+      #   if: github.event.client_payload.slash_command.profile == 'true'
+      #   id: aml_profile
+      #   uses: Azure/aml-profile@master
+      #   with:
+      #       azureCredentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Test your model (this is optional)
+      - name: Test Model
+        if: github.event.client_payload.slash_command.test == 'true'
+        id: aml_test
+        uses: Azure/aml-deploy@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+            model_name:  ${{ github.event.client_payload.slash_command.model_name }}
+            model_version: ${{ github.event.client_payload.slash_command.model_version }}
+
+      # Deploy your model to dev (this is optional)
+      - name: Dev Deploy
+        if: github.event.client_payload.slash_command.dev == 'true'
+        id: aml_dev_deploy
+        uses: Azure/aml-deploy@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+            model_name:  ${{ github.event.client_payload.slash_command.model_name }}
+            model_version: ${{ github.event.client_payload.slash_command.model_version }}
+            parameters_file: "dev_aks.json"
+
+      # Deploy your model to production
+      - name: Prod Deploy
+        if: github.event.client_payload.slash_command.prod == 'true'
+        id: aml_prod_deploy
+        uses: Azure/aml-deploy@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+            model_name:  ${{ github.event.client_payload.slash_command.model_name }}
+            model_version: ${{ github.event.client_payload.slash_command.model_version }}
+            parameters_file: "prod_aks.json"
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            scoring-endpoint: ${{ steps.aml_prod_deploy.outputs.service_scoring_uri}}
+            swagger-uri: ${{ steps.aml_prod_deploy.outputs.service_swagger_uri}}
