@@ -25,21 +25,21 @@ This procedure demonstrates how a member of your organization can find and use a
 **Folder Structure:**
 These workflow samples to automate your deployment workflows targeting various Azure services are organised under folders of same names. For example: `/AppService/asp.net-core-webapp-on-azure.yml`
 
-- [**/AppService** ](https://github.com/Azure/actions-workflow-samples/tree/master/AppService) Samples to configure and deploy web applications that scale with your business, to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
+- [**/AppService** ](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/AppService) Samples to configure and deploy web applications that scale with your business, to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
 
-- [**/FunctionApp**](https://github.com/Azure/actions-workflow-samples/tree/master/FunctionApp) Samples to build and deploy serverless apps to [Azure Functions](https://azure.microsoft.com/en-us/services/functions/)
+- [**/FunctionApp**](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/FunctionApp) Samples to build and deploy serverless apps to [Azure Functions](https://azure.microsoft.com/en-us/services/functions/)
 
-- [**/Kubernetes**](https://github.com/Azure/actions-workflow-samples/tree/master/Kubernetes) Samples to deploy to any Kubernetes cluster on-premise or any cloud including [Azure Kubernetes service](https://azure.microsoft.com/en-us/services/kubernetes-service/)
+- [**/Kubernetes**](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/Kubernetes) Samples to deploy to any Kubernetes cluster on-premise or any cloud including [Azure Kubernetes service](https://azure.microsoft.com/en-us/services/kubernetes-service/)
 
-- [**/MachineLearning**](https://github.com/Azure/actions-workflow-samples/tree/master/MachineLearning) Samples to build and deploy machine learning models using [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/)
+- [**/MachineLearning**](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/MachineLearning) Samples to build and deploy machine learning models using [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/)
 
-- [**/Database**](https://github.com/Azure/actions-workflow-samples/tree/master/Database) Samples to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
+- [**/Database**](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/Database) Samples to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
 
-- [**/AzurePipelines**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePipelines) Samples to trigger a CD run in Azure Pipelines from a GitHub Action workflow
+- [**/AzurePipelines**](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/AzurePipelines) Samples to trigger a CD run in Azure Pipelines from a GitHub Action workflow
 
-- [**/AzureCLI**](https://github.com/Azure/actions-workflow-samples/tree/master/AzureCLI) Samples to run Azure CLI sripts to provision and manage Azure resources from a GitHub Action workflow
+- [**/AzureCLI**](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/AzureCLI) Samples to run Azure CLI sripts to provision and manage Azure resources from a GitHub Action workflow
 
-- [**/AzurePolicy**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePolicy) Samples to trigger on-demand Azure Policy compliance scans from a GitHub Action workflow
+- [**/AzurePolicy**](https://github.com/Azure/actions-workflow-samples/tree/master/workflow-templates/AzurePolicy) Samples to trigger on-demand Azure Policy compliance scans from a GitHub Action workflow
 
 **Naming Notation:**
 * `os-ecosystem-ServiceName-on-azure`: example, linux-container-functionapp-on-azure.yml
