@@ -9,8 +9,8 @@ You use Azure starter templates present in this repo to easily create GitHub CI/
 You can now leverage the workflow templates present in this repo and standardize the getting started experience for your Organization members in just two steps. 
 The templates can then be used by organization members who have permission to create workflows.
 
-1. Fork this repo of "Azure/actions-workflow-samples" repo into your GH organisation. 
-2. Rename the repo as “.github” folder.
+1. Fork this repo "Azure/actions-workflow-samples" into your GH organisation. 
+2. Rename the forked repo as “.github”.
 
 ### Using a workflow template
 This procedure demonstrates how a member of your organization can find and use a workflow template to create a new workflow. An organization's workflow templates can be used by anyone who is a member of the organization.
