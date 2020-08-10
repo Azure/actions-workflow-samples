@@ -28,8 +28,7 @@ jobs:
       - name: "Terraform Format"
         id: fmt
         run: terraform fmt
-        with:
-          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
+        tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
 
       - name: "Terraform Init"
         id: init
