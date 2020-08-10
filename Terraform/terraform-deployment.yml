@@ -4,11 +4,6 @@ on:
     branches:
       - master
 
-# CONFIGURATION
-# For help, go to https://github.com/Azure/Actions
-
-# For terraform sample templates, refer to https://github.com/Azure/terraform/tree/master/samples
-
 env:
   TF_VER: 0.12.29
   TF_WORKING_DIR: "terraform_templates"
