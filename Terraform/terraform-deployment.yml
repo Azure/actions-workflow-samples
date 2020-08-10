@@ -11,7 +11,7 @@ on:
 
 env:
   TF_VER: 0.12.29
-
+  TF_WORKING_DIR: "terraform_templates"
 jobs:
   terraform:
     name: "Terraform"
@@ -20,38 +20,34 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@master
 
-      - name: "Terraform Format"
-        uses: hashicorp/terraform-github-actions@master
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: ${{ env.TF_VER }}
-          tf_actions_subcommand: "fmt"
-          tf_actions_working_dir: "terraform_template_directory"
-          tf_actions_comment: true
+          terraform_version: ${{ env.TF_VER }}
+
+      - name: "Terraform Format"
+        id: fmt
+        run: terraform fmt
+        with:
+          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
 
       - name: "Terraform Init"
-        uses: hashicorp/terraform-github-actions@master
+        id: init
+        run: terraform init
         with:
-          tf_actions_version: ${{ env.TF_VER }}
-          tf_actions_subcommand: "init"
-          tf_actions_working_dir: "terraform_template_directory"
-          tf_actions_comment: true
+          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
 
       - name: "Terraform Validate"
-        uses: hashicorp/terraform-github-actions@master
+        id: validate
+        run: terraform validate -no-color
         with:
-          tf_actions_version: ${{ env.TF_VER }}
-          tf_actions_subcommand: "validate"
-          tf_actions_working_dir: "terraform_template_directory"
-          tf_actions_comment: true
-
+          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
 
       - name: "Terraform Plan"
-        uses: hashicorp/terraform-github-actions@master
+        id: plan
+        run: terraform plan -no-color
         with:
-          tf_actions_version: ${{ env.TF_VER }}
-          tf_actions_subcommand: "plan"
-          tf_actions_working_dir: "terraform_template_directory"
-          tf_actions_comment: true
+          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
         env:
           TF_VAR_agent_client_id: ${{ secrets.TF_VAR_agent_client_id }}
           TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
@@ -59,12 +55,10 @@ jobs:
           TF_VAR_tenant_id: ${{ secrets.TF_VAR_tenant_id }}
 
       - name: "Terraform Apply"
-        uses: hashicorp/terraform-github-actions@master
+        id: apply
+        run: terraform apply
         with:
-          tf_actions_version: ${{ env.TF_VER }}
-          tf_actions_subcommand: "apply"
-          tf_actions_working_dir: "terraform_template_directory"
-          tf_actions_comment: true
+            tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
         env:
           TF_VAR_agent_client_id: ${{ secrets.TF_VAR_agent_client_id }}
           TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
