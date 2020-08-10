@@ -51,7 +51,7 @@ jobs:
 
       - name: "Terraform Apply"
         id: apply
-        run: terraform apply -no-color -auto-approve plan
+        run: terraform apply -no-color -auto-approve
         env:
           TF_VAR_agent_client_id: ${{ secrets.TF_VAR_agent_client_id }}
           TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
