@@ -16,7 +16,9 @@ jobs:
   terraform:
     name: "Terraform"
     runs-on: ubuntu-latest
-    working-directory: ${{ env.TF_WORKING_DIR }}
+    defaults:
+      run:
+        working-directory: ${{ env.TF_WORKING_DIR }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@master
