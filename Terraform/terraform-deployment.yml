@@ -59,5 +59,3 @@ jobs:
           TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
           TF_VAR_subscription_id: ${{ secrets.TF_VAR_subscription_id }}
           TF_VAR_tenant_id: ${{ secrets.TF_VAR_tenant_id }}
-
-# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
