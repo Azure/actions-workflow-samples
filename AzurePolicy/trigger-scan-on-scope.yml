@@ -1,0 +1,23 @@
+name: trigger_scan_on_scope
+on:
+  push:
+    paths:
+    - '**trigger-scan-on-scope.yml'
+
+env:
+  SCAN_SCOPE: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx    # set this to the scope that is to be scanned. It can be a Subscription, Resource group or a resource
+
+jobs:
+  assess-policy-compliance:    
+    runs-on: ubuntu-latest
+    steps:
+    # Azure Login       
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}} 
+    
+    - name: Check for resource compliance
+      uses: azure/policy-compliance-scan@v0
+      with:
+        scopes: ${{env.SCAN_SCOPE}}

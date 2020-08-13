@@ -1,0 +1,8 @@
+{
+    "name": "Trigger Azure Policy Compliance Scan",
+    "description": "Trigger an on-demand Azure policy compliance scan on a scope",
+    "iconName": "azure",
+    "categories": [
+        "Deployment"
+    ]
+}
