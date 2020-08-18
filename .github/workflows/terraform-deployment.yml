@@ -6,7 +6,7 @@ on:
       - test_branch
 
 env:
-  TF_WORKING_DIR: "terraform_templates"
+  TF_WORKING_DIR: "terraform2"
 jobs:
   terraform:
     name: "Terraform"
