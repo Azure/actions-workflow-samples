@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - test-branch
+      - test_branch
 
 env:
   TF_WORKING_DIR: "terraform_templates"
