@@ -5,8 +5,6 @@ on:
       - master
       - test_branch
 
-env:
-  TF_WORKING_DIR: "terraform2"
 jobs:
   terraform:
     name: "Terraform"
@@ -21,26 +19,18 @@ jobs:
       - name: "Terraform Format"
         id: fmt
         run: terraform fmt
-        with:
-          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
 
       - name: "Terraform Init"
         id: init
         run: terraform init
-        with:
-          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
 
       - name: "Terraform Validate"
         id: validate
         run: terraform validate -no-color
-        with:
-          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
 
       - name: "Terraform Plan"
         id: plan
         run: terraform plan -no-color
-        with:
-          tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
         env:
           TF_VAR_agent_client_id: ${{ secrets.TF_VAR_agent_client_id }}
           TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
@@ -50,8 +40,6 @@ jobs:
       - name: "Terraform Apply"
         id: apply
         run: terraform apply
-        with:
-            tf_actions_working_dir: ${{ env.TF_WORKING_DIR }}
         env:
           TF_VAR_agent_client_id: ${{ secrets.TF_VAR_agent_client_id }}
           TF_VAR_agent_client_secret: ${{ secrets.TF_VAR_agent_client_secret }}
