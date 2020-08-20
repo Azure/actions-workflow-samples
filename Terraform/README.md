@@ -28,7 +28,7 @@ az ad sp create-for-rbac --name "myApp" --role contributor \
 
 Add the JSON output as secrets TF_VAR_agent_client_id, TF_VAR_agent_client_secret, TF_VAR_subscription_id, TF_VAR_tenant_id in the GitHub repository. For steps to create and storing secrets, please check [here](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets)
 
-Store the Terraform templates in a directory and update the value of `TF_WORKING_DIR` in the environment for deployment.
+The terraform deployment actions expects the terraform templates to be stored in the root directory. If the terraform templates are stored in a different directory, update the path to terraform actions. More information on terraform actions can be found [here](https://www.terraform.io/docs/github-actions/setup-terraform.html)
 
 For additional help on how use Azure actions, please refer [here](https://github.com/Azure/Actions)
 

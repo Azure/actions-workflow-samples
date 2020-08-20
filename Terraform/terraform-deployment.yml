@@ -4,6 +4,9 @@ on:
     branches:
       - master
 
+# Update secrets TF_VAR_agent_client_id, TF_VAR_agent_client_secret, TF_VAR_subscription_id, TF_VAR_tenant_id in the GitHub repository. 
+# For steps to create and store secrets, please check https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+
 jobs:
   terraform:
     name: "Terraform"
