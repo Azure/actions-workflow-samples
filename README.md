@@ -7,9 +7,15 @@ You use Azure starter templates present in this repo to easily create GitHub CI/
 ## Guidelines to select/author a new sample workflow
 
 **Folder Structure:**
-These workflow samples to automate your deployment workflows targeting various Azure services are organised under folders of same names. For example: `/AppService/asp.net-core-webapp-on-azure.yml`
+These workflow samples to automate your deployment workflows targeting various Azure services are organized under folders of same names. For example: `/AppService/asp.net-core-webapp-on-azure.yml`
 
 - [**/AppService** ](https://github.com/Azure/actions-workflow-samples/tree/master/AppService) Samples to configure and deploy web applications that scale with your business, to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
+
+- [**/AzureCLI**](https://github.com/Azure/actions-workflow-samples/tree/master/AzureCLI) Samples to run Azure CLI scripts to provision and manage Azure resources from a GitHub Action workflow
+
+- [**/AzurePipelines**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePipelines) Samples to trigger a CD run in Azure Pipelines from a GitHub Action workflow
+
+- [**/Database**](https://github.com/Azure/actions-workflow-samples/tree/master/Database) Samples to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
 
 - [**/FunctionApp**](https://github.com/Azure/actions-workflow-samples/tree/master/FunctionApp) Samples to build and deploy serverless apps to [Azure Functions](https://azure.microsoft.com/en-us/services/functions/)
 
@@ -17,11 +23,7 @@ These workflow samples to automate your deployment workflows targeting various A
 
 - [**/MachineLearning**](https://github.com/Azure/actions-workflow-samples/tree/master/MachineLearning) Samples to build and deploy machine learning models using [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/)
 
-- [**/Database**](https://github.com/Azure/actions-workflow-samples/tree/master/Database) Samples to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
-
-- [**/AzurePipelines**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePipelines) Samples to trigger a CD run in Azure Pipelines from a GitHub Action workflow
-
-- [**/AzureCLI**](https://github.com/Azure/actions-workflow-samples/tree/master/AzureCLI) Samples to run Azure CLI sripts to provision and manage Azure resources from a GitHub Action workflow
+- [**/Terraform**](https://github.com/Azure/actions-workflow-samples/tree/master/Terraform) Samples to deploy infrastructure to an Azure subscription using [Terraform Azure Provider](https://www.terraform.io/docs/providers/azurerm/index.html)
 
 - [**/AzurePolicy**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePolicy) Samples to trigger on-demand Azure Policy compliance scans from a GitHub Action workflow
 
