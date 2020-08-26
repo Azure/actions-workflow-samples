@@ -152,16 +152,17 @@ For any credentials like Azure Service Principal, Publish Profile etc add them a
 The above example uses user-level credentials i.e., Azure Service Principal for deployment. 
 
 Follow the steps to configure the secret:
-  * Define a new secret under your repository settings, Add secret menu
-  * Paste the contents of the below [az cli](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest) command as the value of secret variable, for example 'AZURE_CREDENTIALS'
+  * Define a new secret variable under your repository **Settings** -> **Secrets** -> **New secret**.  Provide a secret variable **Name**, for example 'AZURE_CREDENTIALS'. 
+  * Run the below [az cli](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest) command and Store the output as the **Value** of the secret variable
+  * Below *az ad* command scopes the service principal to a specific resource group *{resource-group}* within a specific Azure subscription *{subscription-id}*
 ```bash  
 
    az ad sp create-for-rbac --name "myApp" --role contributor \
                             --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group} \
                             --sdk-auth
                             
-  # Replace {subscription-id}, {resource-group} with the subscription, resource group details of the WebApp
-  
+  # Replace {subscription-id}, {resource-group} with the subscription, resource group details
+
   # The command should output a JSON object similar to this:
 
   {
@@ -173,8 +174,8 @@ Follow the steps to configure the secret:
   }
   
 ```
-  * You can further scope down the Azure Credentials to the Web App using scope attribute. For example, 
-  ```
+ * You can also further scope down the Azure Credentials to a specific Azure resource, for example - a Web App by specifying the path to the specic resource in the *--scopes* attribute. Below script is for scoping the credentials to a web app of name *{app-name}*
+```bash
    az ad sp create-for-rbac --name "myApp" --role contributor \
                             --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group}/providers/Microsoft.Web/sites/{app-name} \
                             --sdk-auth
