@@ -1,12 +1,12 @@
-name: workflow to deploy an ARM Template to a resource group using CLI commands
+name: workflow to deploy an ARM Template to a resource group
 on: push
 
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
 
 env:
-  AZURE_RESOURCE_GROUP: ActionsDemo   # set this to your Azure Resource group's name  
-  AZURE_LOCATION: WestEurope  # set this to your Location Name 
+  AZURE_RESOURCE_GROUP: << Azure Resource Group >>   # set this to your Azure Resource group's name  
+  AZURE_SUBSCRIPTION_ID: << Subscription Id >>   # set this to your Azure Subscription Id
   
 jobs:
   build-and-deploy-to-dev:
@@ -27,41 +27,10 @@ jobs:
         
     # Deployment of template    
     - name: Deploy ARM Template
-      uses: azure/CLI@v1
+      uses: azure/arm-deploy@v1
       with:
-        azcliversion: latest
-        inlineScript: |
-        # You can change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION 
-        # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
-        # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
-          az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }}   
-          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $GITHUB_WORKSPACE/azuredeploy.parameters.json
-        # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
-
-
-# The inline CLI Script needs to be copied into the yml by the user. 
-# Ensure that the environment variables are set in the yml files. As an alternate, exact Resource Gropu names and Location can pe provided.
-# Some of the commonly used scripts are listed below:
-#
-# The script for creation of resource group, in case it is not present:
-# az group create --location $Replace_this_with_the_location --name $Replace_this_with_the_resource_group
-#
-# The script for deployment of ARM Template present in the local directory
-# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-file $Replace_this_with_the_template_location
-#
-# The script for deployment of ARM Template from a remote loaction (URI is known)
-# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-uri $Replace_this_with_the_template_URI
-#
-# The script for deployment of ARM Template with parameters file
-# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-uri $Replace_this_with_the_template_URI --parameters $Replace_this_with_parameter_file
-#
-# In order to update the resource group with new Resources without deleting the existing ones, --mode option can be used. 
-# The accepted values are Incremental (only add resources to resource group) or Complete (remove extra resources from resource group). Default value is Incremental
-# The script for using the mode option
-# az group deployment create --resource-group $Replace_this_with_the_resource_group --template-file $Replace_this_with_the_template_location --mode Complete
-# 
-# To delete a resource group from the subscription, use the following script
-# az group deployment delete --name $Replace_this_with_deployment_name --resource-group $Replace_this_with_the_resource_group
-#
-# For other examples on usage of CLI Commands to manage the resources, please refer to the following page:
-# https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
+        # You can change these environment variables for your configuration:   AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP
+        subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ env.AZURE_RESOURCE_GROUP }}
+        template: $GITHUB_WORKSPACE/azuredeploy.json  # Set this to the location of your template file
+        parameters: $GITHUB_WORKSPACE/azuredeploy.parameters.json # Set this to the location of your parameters file
