@@ -1,0 +1,41 @@
+name: workflow to deploy an ARM Template to a Subscription Scope
+on: push
+
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+
+env:
+  AZURE_SUBSCRIPTION_ID: << Subscription Id >>   # set this to your Azure Subscription Id
+  
+jobs:
+  build-and-deploy-to-dev:
+    runs-on: ubuntu-latest
+    steps:
+                
+    # Authentication
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # Below *az ad* command scopes the service principal to a specific Azure subscription *{subscription-id}*
+    #    az ad sp create-for-rbac --name "myApp" --role contributor --scopes /subscriptions/{subscription-id} --sdk-auth           
+    # Replace {subscription-id} with the your subscription, resource group details. 
+    # Example: az ad sp create-for-rbac --name "myApp" --role contributor --scopes /subscriptions/e1046c08-7072-****-****-************  --sdk-auth     
+    # Place the output of the above command as value of secret variable - AZURE_CREDENTIALS
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+    
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v1
+        
+    # Deployment of template    
+    - name: Deploy ARM Template
+      uses: azure/arm-deploy@v1
+      with:
+        # You can change these environment variables for your configuration:   AZURE_SUBSCRIPTION_ID
+        scope: subscription
+        subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
+        region: centralus # Set this to your target region
+        template: $GITHUB_WORKSPACE/azuredeploy.json  # Set this to the location of your template file
+        parameters: $GITHUB_WORKSPACE/azuredeploy.parameters.json # Set this to the location of your parameters file
