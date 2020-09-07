@@ -13,6 +13,8 @@ These workflow samples to automate your deployment workflows targeting various A
 
 - [**/AzureCLI**](https://github.com/Azure/actions-workflow-samples/tree/master/AzureCLI) Samples to run Azure CLI scripts to provision and manage Azure resources from a GitHub Action workflow
 
+- [**/ARM**](https://github.com/Azure/actions-workflow-samples/tree/master/ARM) Samples to deploy [Azure Resource Manager templates](https://docs.microsoft.com/bs-latn-ba/azure/azure-resource-manager/templates/)
+
 - [**/AzurePipelines**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePipelines) Samples to trigger a CD run in Azure Pipelines from a GitHub Action workflow
 
 - [**/Database**](https://github.com/Azure/actions-workflow-samples/tree/master/Database) Samples to deploy to a database on Azure, [Azure SQl database](https://azure.microsoft.com/en-us/services/sql-database/) or [Azure MySQL database](https://azure.microsoft.com/en-us/services/mysql/)
