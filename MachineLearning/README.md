@@ -24,7 +24,7 @@ Here we have two template contains code and workflow definitions for a machine l
 
     Go to this template and follow the getting started guide to setup an ML Ops process within minutes and learn how to use the Azure       Machine Learning GitHub Actions in combination. This template demonstrates a very simple process for training and deploying machine     learning models.
 
-2. **Advanced template repository: [aml-template](https://github.com/Azure/aml-template)**
+2. **Advanced template repository: [mlops-enterprise-template](https://github.com/Azure-Samples/mlops-enterprise-template)**
 
     This template demonstrates how approval processes can be included in the process and how training and deployment workflows can be       splitted. It also shows how workflows (e.g. deployment) can be triggered from pull requests. More enhancements will be added to this     template in the future to make it more enterprise ready.
     
