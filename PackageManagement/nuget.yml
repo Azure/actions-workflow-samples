@@ -27,7 +27,7 @@ on:
 #
 
 env:
-  AZURE_ARTIFACTS_REGISTRY_URL: https://pkgs.dev.azure.com/.../nuget/v3/index.json       # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
+  AZURE_ARTIFACTS_FEED_URL: https://pkgs.dev.azure.com/.../nuget/v3/index.json       # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
   BUILD_CONFIGURATION: 'Release'                                                      # set this to the appropriate build configuration
   DOTNET_VERSION: '3.1.x'                                                             # set this to the dot net version to use
   GITHUB_PACKAGE_REGISTRY_URL: https://nuget.pkg.github.com/yourorganisation/index.json   # set this to the registry url for your GitHub package registry
@@ -35,10 +35,29 @@ env:
 # Learn about the artifact feed types at https://docs.microsoft.com/en-us/azure/devops/artifacts/feeds/project-scoped-feeds?view=azure-devops#understanding-the-difference-between-an-organization-scoped-feed-and-a-project-scoped-feed
 
 jobs:
-  az-artifacts-build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-
+      # Checkout the repo
+      - uses: actions/checkout@v2
+      
+      # Setup .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          
+      # Run dotnet build and package
+      - name: dotnet build and test
+        run: |
+          dotnet restore
+          dotnet build --configuration '${{ env.BUILD_CONFIGURATION }}'
+          dotnet test --configuration '${{ env.BUILD_CONFIGURATION }}'
+      
+  az-artifacts-build-and-deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       # Checkout the repo
       - uses: actions/checkout@master
       
@@ -47,7 +66,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          source-url: ${{ env.AZURE_ARTIFACTS_REGISTRY_URL }}
+          source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.AZURE_ARTIFACTS_PAT }} # Setup the .NET Core SDK with the appropriate auth token to access the GitHub Package Registry
       
@@ -63,9 +82,9 @@ jobs:
         run: dotnet nuget push --api-key AzureArtifacts bin/Release/*.nupkg
 
   gpr-build-and-deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
-
       # Checkout the repo
       - uses: actions/checkout@master
       
