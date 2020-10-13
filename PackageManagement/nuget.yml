@@ -27,9 +27,9 @@ on:
 #
 
 env:
-  AZURE_ARTIFACTS_FEED_URL: https://pkgs.dev.azure.com/.../nuget/v3/index.json       # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
-  BUILD_CONFIGURATION: 'Release'                                                      # set this to the appropriate build configuration
-  DOTNET_VERSION: '3.1.x'                                                             # set this to the dot net version to use
+  AZURE_ARTIFACTS_FEED_URL: https://pkgs.dev.azure.com/.../nuget/v3/index.json            # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
+  BUILD_CONFIGURATION: 'Release'                                                          # set this to the appropriate build configuration
+  DOTNET_VERSION: '3.1.x'                                                                 # set this to the dot net version to use
   GITHUB_PACKAGE_REGISTRY_URL: https://nuget.pkg.github.com/yourorganisation/index.json   # set this to the registry url for your GitHub package registry
  
 # Learn about the artifact feed types at https://docs.microsoft.com/en-us/azure/devops/artifacts/feeds/project-scoped-feeds?view=azure-devops#understanding-the-difference-between-an-organization-scoped-feed-and-a-project-scoped-feed
