@@ -1,0 +1,57 @@
+name: Infra Deployment and Training
+
+on:
+  push:
+    branches: [ master ]
+    paths: 
+      - '.github/workflows/**' 
+      - 'code/**' 
+      - 'infra/**'
+ 
+env:
+  AZURE_RESOURCE_GROUP: your-resource-group-name
+  STORAGE_ACCOUNT: storage-account-name
+    
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Check Out Repository
+      id: checkout_repository
+      uses: actions/checkout@v2
+    
+    # Login to Azure
+    - name: Azure Login
+      id: azure_login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # Deploys Azure resources 
+    - name: Deploy Azure resources
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az deployment group create \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --template-file $GITHUB_WORKSPACE/infra/deploy.core-infra.json \
+            --parameters $GITHUB_WORKSPACE/infra/params.deploy.core-infra.json \
+            patToken=${{secrets.PATTOKEN}} repo_name=$GITHUB_REPOSITORY DataLakestorageName=${{ env.STORAGE_ACCOUNT }}
+
+    # Connect the Azure Machine Learning Workspace
+    - name: Connect Azure Machine Learning Workspace
+      id: aml_workspace
+      uses: Azure/aml-workspace@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # Submit a training run to the Azure Machine Learning
+    - name: Submit training run
+      id: aml_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}

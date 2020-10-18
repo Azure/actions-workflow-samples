@@ -1,0 +1,70 @@
+name: Model deployment
+
+on:
+  repository_dispatch:
+    types: [machinelearningservices-runcompleted]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check variables
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload.data) }}
+        run: |
+          if [ -z "${{ github.event.client_payload.data.experimentName }}"]; then echo "experiment id is NULL"; exit 1; else echo "model_name is ${{ toJson(github.event.client_payload.data.experimentName) }}"; fi;
+          if [ -z "${{ github.event.client_payload.data.runId }}"]; then echo "runId is NULL"; exit 1; else echo "model_version is ${{ toJson(github.event.client_payload.data.runId) }}"; fi;
+      # # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v2
+    
+      - name: Connect/Create Azure Machine Learning Workspace
+        id: aml_workspace
+        uses: Azure/aml-workspace@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+            
+      - uses: Azure/aml-compute@v1
+        id: aml_compute
+        with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      # # Register model in Azure Machine Learning model registry
+      - name: Register model
+        id: aml_registermodel
+        uses: Azure/aml-registermodel@ashishonce/adddefaulttags
+        with:
+             azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+             run_id:  ${{ github.event.client_payload.data.runId }}
+             experiment_name: ${{ github.event.client_payload.data.experimentName }}
+
+      # Deploy your model to dev (this is optional)
+      - name: Dev Deploy
+        id: aml_dev_deploy
+        uses: Azure/aml-deploy@v1
+        with:
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+            model_name:  "${{ steps.aml_registermodel.outputs.model_name }}"
+            model_version: "${{ steps.aml_registermodel.outputs.model_version }}"
+            parameters_file: "deploy_aci.json"
+      
+      - name: Display Aci Deploy Details
+        run: |
+          echo scoring-endpoint: ${{ steps.aml_dev_deploy.outputs.service_scoring_uri}}
+          echo swagger-uri: ${{ steps.aml_dev_deploy.outputs.service_swagger_uri}}
+
+       # Deploy your model to production
+      - name: Prod Deploy
+        id: aml_prod_deploy
+        uses: Azure/aml-deploy@v1
+        with:
+           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+           model_name:  "${{ steps.aml_registermodel.outputs.model_name }}"  
+           model_version: "${{ steps.aml_registermodel.outputs.model_version }}"
+           parameters_file: "deploy_aks.json"
+
+      - name: Display AKS Deploy Details
+        run: |
+           echo scoring-endpoint: ${{ steps.aml_prod_deploy.outputs.service_scoring_uri}}
+           echo swagger-uri: ${{ steps.aml_prod_deploy.outputs.service_swagger_uri}}

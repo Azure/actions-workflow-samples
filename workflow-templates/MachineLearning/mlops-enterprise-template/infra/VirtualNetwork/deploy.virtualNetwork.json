@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Specifies the location for all resources."
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "defaultValue": "amlVnet",
+            "metadata": {
+                "description": "Specifies the name of the virtual network which is created."
+            }
+        }
+    },
+    "variables": {
+        "location": "[parameters('location')]",
+        "virtualNetworkName": "[parameters('virtualNetworkName')]"
+    },
+    "resources": [
+        {
+            "name": "[variables('virtualNetworkName')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-11-01",
+            "location": "[variables('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "privateLinkSubnet",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/27",
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "serviceEndpointSubnet",
+                        "properties": {
+                            "addressPrefix": "10.0.0.32/27",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "computeSubnet",
+                        "properties": {
+                            "addressPrefix": "10.0.0.64/27"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+# Conda environment specification. Details about the Conda environment file format:
+# https://conda.io/docs/user-guide/tasks/manage-environments.html#create-env-file-manually
+
+name: deployment_env
+dependencies:
+  - python=3.6.2
+  - scikit-learn=0.23.1
+  - numpy=1.19.0
+  - pip:
+    - azureml-defaults==1.8.0
+    - azureml-monitoring==0.1.0a18
+    - inference-schema==1.0.2
+    - inference-schema[numpy-support]==1.0.2
+channels:
+  - conda-forge

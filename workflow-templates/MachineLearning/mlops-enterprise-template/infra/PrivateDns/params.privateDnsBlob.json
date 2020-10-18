@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateDnsZoneName": {
+            "value": "privatelink.blob.core.windows.net"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/558bd446-4212-46a2-908c-9ab0a628705e/resourceGroups/azureml-privatelink-rg/providers/Microsoft.Network/virtualNetworks/amlVnet"
+        }
+    }
+}

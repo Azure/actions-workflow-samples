@@ -1,0 +1,21 @@
+pipeline:
+  name: TrainingPipeline
+  parameters:
+    PipelineParam1:
+    type: int
+    default: 1
+  default_compute: igniteCluster
+  steps:
+    Step1:
+      runconfig: "/code/train/run_config.yml"
+      parameters:
+        NUM_ITERATIONS_2:
+          source: PipelineParam1
+        NUM_ITERATIONS_1: 7
+      type: "PythonScriptStep"
+      name: "TrainingStep"
+      script_name: "train.py"
+      allow_reuse: True
+      source_directory: "/code/train/"
+      inputs:
+      outputs:

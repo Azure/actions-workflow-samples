@@ -1,0 +1,29 @@
+name: Train the Model
+
+# Controls when the action will run. Triggers the workflow on repository dispatch
+# events but only for the master branch
+on: 
+ repository_dispatch:
+   types: [storage-blobcreated, storage-blobdeleted]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Check Out Repository
+      id: checkout_repository
+      uses: actions/checkout@v2
+
+    # AML Workspace Action
+    - uses: Azure/aml-workspace@v1
+      id: aml_workspace
+      with:
+        azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # AML Compute Action
+    - uses: Azure/aml-run@v1
+      id: aml_run
+      with:
+        # required inputs as secrets
+        azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}

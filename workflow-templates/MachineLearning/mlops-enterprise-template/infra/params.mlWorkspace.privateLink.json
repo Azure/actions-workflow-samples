@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westus2"
+        },
+        "workspaceName": {
+            "value": "azuremlpl"
+        },
+        "keyVaultName": {
+            "value": "azuremlplkv0"
+        },
+        "applicationInsightsName": {
+            "value": "azuremlplai"
+        },
+        "storageAccountName": {
+            "value": "azuremlpls"
+        },
+        "storageAccountType": {
+            "value": "Standard_ZRS"
+        },
+        "containerRegistryName": {
+            "value": "azuremlplcr"
+        },
+        "logAnalyticsWorkspaceResourceId": {
+            "value": "/subscriptions/558bd446-4212-46a2-908c-9ab0a628705e/resourcegroups/azureml-privatelink-rg/providers/microsoft.operationalinsights/workspaces/azuremlpllaw"
+        },
+        "privateDnsZoneResourceGroupName": {
+            "value": "azureml-privatelink-rg"
+        },
+        "privateLinkSubnetResourceId": {
+            "value": "/subscriptions/558bd446-4212-46a2-908c-9ab0a628705e/resourceGroups/azureml-privatelink-rg/providers/Microsoft.Network/virtualNetworks/amlVnet/subnets/privateLinkSubnet"
+        },
+        "serviceEndpointSubnetResourceId": {
+            "value": "/subscriptions/558bd446-4212-46a2-908c-9ab0a628705e/resourceGroups/azureml-privatelink-rg/providers/Microsoft.Network/virtualNetworks/amlVnet/subnets/serviceEndpointSubnet"
+        }
+    }
+}

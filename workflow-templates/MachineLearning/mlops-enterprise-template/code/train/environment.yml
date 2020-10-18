@@ -1,0 +1,14 @@
+# Conda environment specification. Details about the Conda environment file format:
+# https://conda.io/docs/user-guide/tasks/manage-environments.html#create-env-file-manually
+
+name: training_env
+dependencies:
+  - python=3.6.2
+  - scikit-learn=0.23.1
+  - matplotlib=3.2.2
+  - numpy=1.19.0
+  - pip:
+    - azureml-defaults==1.8.0
+    - azureml-dataprep[pandas,fuse]==1.9.0
+channels:
+  - conda-forge

@@ -1,0 +1,600 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "string",
+      "defaultValue": "new02",
+      "metadata": {
+        "description": "Specifies the name of the Azure Machine Learning workspace."
+      }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "basic",
+      "allowedValues": [
+        "basic",
+        "enterprise"
+      ],
+      "metadata": {
+        "description": "Specifies the sku, also referred as 'edition' of the Azure Machine Learning workspace."
+      }
+    },
+    "storageAccountNewOrExisting": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ]
+    },
+    "dataLakeNewOrExisting": {
+      "type": "string",
+      "defaultValue": "existing",
+      "allowedValues": [
+        "new",
+        "existing"
+      ]
+    },
+    "wsStorageAccountName": {
+      "type": "string",
+      "defaultValue": "[concat('sa',uniqueString(resourceGroup().id))]"
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Standard_ZRS",
+        "Premium_LRS",
+        "Premium_ZRS",
+        "Standard_GZRS",
+        "Standard_RAGZRS"
+      ]
+    },
+    "wsStorageAccountResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "keyVaultNewOrExisting": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ],
+      "metadata": {
+        "description": "Determines whether or not a key vault should be provisioned."
+      }
+    },
+    "keyVaultName": {
+      "type": "string",
+      "defaultValue": "[concat('kv',uniqueString(resourceGroup().id))]"
+    },
+    "keyVaultResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "applicationInsightsNewOrExisting": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ]
+    },
+    "applicationInsightsName": {
+      "type": "string",
+      "defaultValue": "[concat('ai',uniqueString(resourceGroup().id))]"
+    },
+    "applicationInsightsResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "containerRegistryNewOrExisting": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ]
+    },
+    "containerRegistryName": {
+      "type": "string",
+      "defaultValue": "[concat('acr',uniqueString(resourceGroup().id))]"
+    },
+    "containerRegistrySku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "containerRegistryResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "confidential_data": {
+      "type": "string",
+      "defaultValue": "false",
+      "allowedValues": [
+        "false",
+        "true"
+      ],
+      "metadata": {
+        "description": "Specifies that the Azure Machine Learning workspace holds highly confidential data."
+      }
+    },
+    "encryption_status": {
+      "type": "string",
+      "defaultValue": "Disabled",
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ],
+      "metadata": {
+        "description": "Specifies if the Azure Machine Learning workspace should be encrypted with customer managed key."
+      }
+    },
+    "cmk_keyvault": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Specifies the customer managed keyVault arm id."
+      }
+    },
+    "resource_cmk_uri": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Specifies if the customer managed keyvault key uri."
+      }
+    },
+    "functionAppName": {
+      "defaultValue": "igniteFApp",
+      "type": "string",
+      "metadata": {
+        "description": "Name use as base-template to named the resources to be deployed in Azure."
+      }
+    },
+    "functionGitHubURL": {
+      "type": "string",
+      "defaultValue": "https://github.com/Azure/aml-function.git",
+      "metadata": {
+        "description": "The URL of GitHub (ending by .git)"
+      }
+    },
+    "functionGitHubBranch": {
+      "type": "string",
+      "defaultValue": "master",
+      "metadata": {
+        "description": "Name of the branch to use when deploying (Default = master)."
+      }
+    },
+    "functionName": {
+      "type": "string",
+      "defaultValue": "generic_triggers"
+    },
+    "functionFolder": {
+      "type": "string",
+      "defaultValue": "fappdeploy",
+      "metadata": {
+        "description": "The name of folder containing the function code."
+      }
+    },
+    "ExpireOn": {
+      "type": "string",
+      "defaultValue": "[utcNow('yyyy-MM-dd')]",
+      "metadata": {
+        "description": "Just a text value (format: yyyy-MM-dd) that express when it is safe to delete these resources"
+      }
+    },
+    "ownerName": {
+      "type": "string",
+      "defaultValue": "amlEnterprise",
+      "metadata": {
+        "description": "Owner of this function app deployment, person to contact for question."
+      }
+    },
+    "eventGridSubscriptionName": {
+      "type": "string",
+      "defaultValue": "igniteMlWorkspace",
+      "metadata": {
+        "description": "The prefix of the Event Grid custom topic's subscription."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Provide a location for the Blob Storage account that supports Event Grid."
+      }
+    },
+    "functionAppResourceGroup": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "patToken": {
+      "type": "string",
+      "defaultValue": "temppat",
+      "metadata": {
+        "description": "The name of folder containing the function code."
+      }
+    },
+    "computeName": {
+      "type": "string",
+      "defaultValue": "mycluster",
+      "metadata": {
+        "description": "The name of compute target."
+      }
+    },
+    "repo_name": {
+      "type": "string",
+      "defaultValue": "norepo",
+      "metadata": {
+        "description": "The name of repo."
+      }
+    },
+    "DataLakestorageName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide the existing data lake storage account name."
+      }
+    },
+    "storageEventSubName": {
+      "type": "string",
+      "defaultValue": "subscribeToStorage",
+      "metadata": {
+        "description": "Provide a name for the Event Grid subscription for storage."
+      }
+    }
+  },
+  "variables": {
+    "suffix": "[substring(toLower(uniqueString(resourceGroup().id, resourceGroup().location)),0,5)]",
+    "functionappBaseName": "[uniqueString(parameters('functionAppName'))]",
+    "funcAppName": "[toLower(concat(variables('functionappBaseName'), variables('suffix')))]",
+    "funcStorageAccountName": "[tolower(concat(substring(variables('functionappBaseName'), 0, min(length(variables('functionappBaseName')),16)), variables('suffix'), 'stg'))]",
+    "funcHhostingPlanName": "[concat(substring(variables('functionappBaseName'), 0, min(length(variables('functionappBaseName')),14)), variables('suffix'), 'plan')]",
+    "insightsAppName": "[concat(substring(variables('functionappBaseName'), 0, min(length(variables('functionappBaseName')),14)), variables('suffix'), '-meta')]",
+    "functionProjectFolder": "[parameters('functionFolder')]",
+    "functionUrl": "[concat('https://', variables('funcAppName'),'.azurewebsites.net/api/', parameters('functionName'),'?code=')]",
+    "tenantId": "[subscription().tenantId]",
+    "wsStorageAccount": "[resourceId(parameters('wsStorageAccountResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('wsStorageAccountName'))]",
+    "keyVault": "[resourceId(parameters('keyVaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+    "applicationInsights": "[resourceId(parameters('applicationInsightsResourceGroupName'), 'Microsoft.Insights/components', parameters('applicationInsightsName'))]",
+    "containerRegistry": "[resourceId(parameters('containerRegistryResourceGroupName'), 'Microsoft.ContainerRegistry/registries', parameters('containerRegistryName'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-11-01",
+      "name": "[variables('funcAppName')]",
+      "type": "Microsoft.Web/sites",
+      "kind": "functionapp",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "Owner": "[parameters('ownerName')]",
+        "ExpireOn": "[parameters('ExpireOn')]"
+      },
+      "dependsOn": [
+        "[concat('microsoft.insights/components/', variables('insightsAppName'))]",
+        "[concat('Microsoft.Web/serverfarms/', variables('funcHhostingPlanName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/',variables('funcStorageAccountName'))]"
+      ],
+      "properties": {
+        "name": "[variables('funcAppName')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~3"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "dotnet"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(concat('microsoft.insights/components/', variables('insightsAppName')), '2015-05-01').InstrumentationKey]"
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference(concat('microsoft.insights/components/', variables('insightsAppName')), '2015-05-01').ConnectionString]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('funcStorageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('funcStorageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+            },
+            {
+              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('funcStorageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('funcStorageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "[concat(variables('funcAppName'), 'ba91')]"
+            },
+            {
+              "name": "PROJECT",
+              "value": "[variables('functionProjectFolder')]"
+            },
+            {
+              "name": "FUNCTIONS_V2_COMPATIBILITY_MODE",
+              "value": "true"
+            },
+            {
+              "name": "PAT_TOKEN",
+              "value": "[parameters('patToken')]"
+            }
+          ]
+        },
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', variables('funcHhostingPlanName'))]",
+        "hostingEnvironment": "",
+        "clientAffinityEnabled": true
+      },
+      "resources": [
+        {
+          "apiVersion": "2018-11-01",
+          "type": "sourcecontrols",
+          "name": "web",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites/', variables('funcAppName'))]"
+          ],
+          "properties": {
+            "repoUrl": "[parameters('functionGitHubURL')]",
+            "branch": "[parameters('functionGitHubBranch')]",
+            "publishRunbook": true,
+            "IsManualIntegration": true
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "name": "[variables('funcHhostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "kind": "",
+      "tags": {
+        "Owner": "[parameters('ownerName')]",
+        "ExpireOn": "[parameters('ExpireOn')]"
+      },
+      "properties": {
+        "name": "[variables('funcHhostingPlanName')]",
+        "computeMode": "Dynamic"
+      },
+      "sku": {
+        "Tier": "Dynamic",
+        "Name": "Y1"
+      }
+    },
+    {
+      "apiVersion": "2015-05-01",
+      "name": "[variables('insightsAppName')]",
+      "type": "microsoft.insights/components",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "Owner": "[parameters('ownerName')]",
+        "ExpireOn": "[parameters('ExpireOn')]"
+      },
+      "kind": "",
+      "properties": {
+        "Application_Type": "web",
+        "ApplicationId": "[variables('funcAppName')]",
+        "Request_Source": "rest"
+      }
+    },
+    {
+      "apiVersion": "2019-06-01",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('funcStorageAccountName')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "properties": {
+        "supportsHttpsTrafficOnly": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('storageAccountNewOrExisting'), 'new')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-04-01",
+      "name": "[parameters('wsStorageAccountName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('storageAccountType')]"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": true
+            },
+            "file": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "supportsHttpsTrafficOnly": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('keyVaultNewOrExisting'), 'new')]",
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2019-09-01",
+      "name": "[parameters('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "tenantId": "[variables('tenantId')]",
+        "sku": {
+          "name": "standard",
+          "family": "A"
+        },
+        "accessPolicies": []
+      }
+    },
+    {
+      "condition": "[equals(parameters('applicationInsightsNewOrExisting'), 'new')]",
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2018-05-01-preview",
+      "name": "[parameters('applicationInsightsName')]",
+      "location": "[if(or(equals(parameters('location'),'eastus2'), equals(parameters('location'),'westcentralus')),'southcentralus',parameters('location'))]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web"
+      }
+    },
+    {
+      "condition": "[equals(parameters('containerRegistryNewOrExisting'), 'new')]",
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2019-05-01",
+      "name": "[parameters('containerRegistryName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('containerRegistrySku')]"
+      },
+      "properties": {
+        "adminUserEnabled": true
+      }
+    },
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces",
+      "apiVersion": "2020-03-01",
+      "name": "[parameters('workspaceName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[variables('wsStorageAccount')]",
+        "[variables('keyVault')]",
+        "[variables('applicationInsights')]",
+        "[variables('containerRegistry')]"
+      ],
+      "identity": {
+        "type": "systemAssigned"
+      },
+      "sku": {
+        "tier": "[parameters('sku')]",
+        "name": "[parameters('sku')]"
+      },
+      "properties": {
+        "friendlyName": "[parameters('workspaceName')]",
+        "storageAccount": "[variables('wsStorageAccount')]",
+        "keyVault": "[variables('keyVault')]",
+        "applicationInsights": "[variables('applicationInsights')]",
+        "encryption": {
+          "status": "[parameters('encryption_status')]",
+          "keyVaultProperties": {
+            "keyVaultArmId": "[parameters('cmk_keyvault')]",
+            "keyIdentifier": "[parameters('resource_cmk_uri')]"
+          }
+        },
+        "hbiWorkspace": "[parameters('confidential_data')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('workspaceName'),'/Microsoft.EventGrid/',parameters('eventGridSubscriptionName'))]",
+      "type": "Microsoft.MachineLearningServices/workspaces/providers/eventSubscriptions",
+      "location": "[parameters('location')]",
+      "apiVersion": "2020-01-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/Sites', variables('funcAppName'))]",
+        "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('workspaceName'))]",
+        "[resourceId('Microsoft.Web/Sites/sourcecontrols', variables('funcAppName'), 'web')]",
+        "[resourceId('Microsoft.Web/serverfarms', variables('funcHhostingPlanName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('funcStorageAccountName'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "destination": {
+          "endpointType": "WebHook",
+          "properties": {
+            "endpointUrl": "[concat(variables('functionUrl'), listkeys(resourceId('Microsoft.Web/sites/host', variables('funcAppName'), 'default'), '2019-08-01').functionKeys.default,'&repoName=',parameters('repo_name'))]",
+            "maxEventsPerBatch": 1,
+            "preferredBatchSizeInKilobytes": 64
+          }
+        },
+        "filter": {
+          "includedEventTypes": [
+            "Microsoft.MachineLearningServices.ModelRegistered",
+            "Microsoft.MachineLearningServices.ModelDeployed",
+            "Microsoft.MachineLearningServices.RunCompleted",
+            "Microsoft.MachineLearningServices.DatasetDriftDetected",
+            "Microsoft.MachineLearningServices.RunStatusChanged"
+          ],
+          "advancedFilters": []
+        },
+        "labels": [],
+        "eventDeliverySchema": "EventGridSchema"
+      }
+    },
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/computes",
+      "apiVersion": "2020-04-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('computeName'))]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('workspaceName'))]"
+      ],
+      "properties": {
+        "description": "AML Cluster created by ARM template",
+        "computeType": "AmlCompute",
+        "computeLocation": "[parameters('location')]",
+        "properties": {
+          "vmSize": "STANDARD_DS3_V2",
+          "vmPriority": "Dedicated",
+          "scaleSettings": {
+            "maxNodeCount": 4,
+            "minNodeCount": 0,
+            "nodeIdleTimeBeforeScaleDown": "PT2M"
+          },
+          "remoteLoginPortPublicAccess": "Enabled"
+        }
+      }
+    },
+    {
+       "condition": "[equals(parameters('dataLakeNewOrExisting'), 'new')]",
+       "type": "Microsoft.Storage/storageAccounts",
+       "apiVersion": "2019-05-01",
+       "name": "[parameters('DataLakestorageName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/Sites', variables('funcAppName'))]",
+        "[resourceId('Microsoft.Web/Sites/sourcecontrols', variables('funcAppName'), 'web')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/providers/eventSubscriptions",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[concat(parameters('DataLakestorageName'), '/Microsoft.EventGrid/', parameters('storageEventSubName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/Sites', variables('funcAppName'))]",
+        "[resourceId('Microsoft.Web/Sites/sourcecontrols', variables('funcAppName'), 'web')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('DataLakestorageName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('funcStorageAccountName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', variables('funcHhostingPlanName'))]"
+      ],
+      "properties": {
+        "destination": {
+          "properties": {
+            "endpointUrl": "[concat('https://' , variables('funcAppName') , '.azurewebsites.net/api/' , parameters('functionName') , '?code=' , listkeys(resourceId('Microsoft.Web/sites/host', variables('funcAppName'), 'default'), '2019-08-01').functionKeys.default ,'&repoName=' , parameters('repo_name'))]"
+          },
+          "endpointType": "WebHook"
+        },
+        "filter": {
+          "includedEventTypes": [
+            "Microsoft.Storage.BlobCreated",
+            "Microsoft.Storage.BlobDeleted"
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {  }
+}
