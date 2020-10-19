@@ -37,3 +37,9 @@
 [submodule "App Samples/AppService/Node_express_container"]
 	path = App Samples/AppService/Node_express_container
 	url = https://github.com/Azure-Samples/Node_express_container
+[submodule "App Samples/Kubernetes/RockPaperScissorsLizardSpock"]
+	path = App Samples/Kubernetes/RockPaperScissorsLizardSpock
+	url = https://github.com/microsoft/RockPaperScissorsLizardSpock
+[submodule "App Samples/Kubernetes/java-on-aks"]
+	path = App Samples/Kubernetes/java-on-aks
+	url = https://github.com/Azure-Samples/java-on-aks
