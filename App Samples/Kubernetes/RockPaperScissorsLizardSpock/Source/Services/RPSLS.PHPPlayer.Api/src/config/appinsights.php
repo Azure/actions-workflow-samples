@@ -1,5 +1,0 @@
-<?php
-
-return [
-    'APPLICATION_INSIGHTS_IKEY' => getenv('APPLICATION_INSIGHTS_IKEY') ?: env('APPLICATION_INSIGHTS_IKEY', ''),
-];

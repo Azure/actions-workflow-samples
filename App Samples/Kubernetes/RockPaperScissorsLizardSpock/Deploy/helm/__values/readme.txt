@@ -1,1 +1,0 @@
-All (but this) files in this folder are in .gitignore, so if you put one configuration file (with secrets) won't be push accidentally.

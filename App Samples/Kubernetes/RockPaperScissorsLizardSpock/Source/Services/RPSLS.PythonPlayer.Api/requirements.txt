@@ -1,4 +1,0 @@
-gunicorn
-flask
-py-healthcheck
-applicationinsights

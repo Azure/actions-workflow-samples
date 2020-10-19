@@ -1,6 +1,0 @@
-lizard
-none
-paper
-rock
-scissors
-spock
