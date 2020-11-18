@@ -62,6 +62,8 @@ Follow the steps to create the Azure credentials (Service Principal) :
   * Now in the workflow file in your branch: `.github/workflows/workflow.yml` replace the secret in Azure login action with your secret name
 
 ## Set secret with Web App Publish_Profile
+
+**Note: As of October 2020, Linux web apps will need the app setting `WEBSITE_WEBDEPLOY_USE_SCM` set to `true` before downloading the publish profile from the Azure portal. This requirement will be removed in the future.**
 1. In the Azure portal, Navigate to your web app
 1. In the Overview page of the app, click on "Get publish profile". A publish profile is a kind of deployment credential, useful when you don't own the Azure subscription. 
 1. Open the downloaded settings file in VS Code and copy the contents of the file.
