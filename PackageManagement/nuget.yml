@@ -1,0 +1,111 @@
+name: Push Nuget Package to Azure Artifacts or GitHub Package Registry
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+
+# CONFIGURATION
+#
+# 1. Set the environment variables for your Build Configuration (Release/Debug), .NET Version,
+#    GitHub Package Registry URL and Azure Artifacts Feed URL as appropriate.
+#
+# 2. Ensure that your csproj file is configured correctly as outlined in the documentation below:
+#    https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-dotnet-cli-for-use-with-github-packages#publishing-a-package
+#
+# 3. Set up the following secrets in your repository:
+#    AZURE_ARTIFACTS_PAT
+#    
+#    You can follow the below documentation to create a Personal Access Token (PAT)
+#    https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page#create-a-pat
+#
+#    You can find additional information on the scopes and associated permissions in the documentation below:
+#    https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops#scopes
+#
+
+env:
+  AZURE_ARTIFACTS_FEED_URL: https://pkgs.dev.azure.com/.../nuget/v3/index.json            # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
+  BUILD_CONFIGURATION: 'Release'                                                          # set this to the appropriate build configuration
+  DOTNET_VERSION: '3.1.x'                                                                 # set this to the dot net version to use
+  GITHUB_PACKAGE_REGISTRY_URL: https://nuget.pkg.github.com/yourorganisation/index.json   # set this to the registry url for your GitHub package registry
+ 
+# Learn about the artifact feed types at https://docs.microsoft.com/en-us/azure/devops/artifacts/feeds/project-scoped-feeds?view=azure-devops#understanding-the-difference-between-an-organization-scoped-feed-and-a-project-scoped-feed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@v2
+      
+      # Setup .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          
+      # Run dotnet build and package
+      - name: dotnet build and test
+        run: |
+          dotnet restore
+          dotnet build --configuration '${{ env.BUILD_CONFIGURATION }}'
+          dotnet test --configuration '${{ env.BUILD_CONFIGURATION }}'
+      
+  az-artifacts-build-and-deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@master
+      
+      # Setup .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_ARTIFACTS_PAT }} # Setup the .NET Core SDK with the appropriate auth token to access the GitHub Package Registry
+      
+      # Run dotnet build and package
+      - name: dotnet build and publish
+        run: |
+          dotnet restore
+          dotnet build --configuration '${{ env.BUILD_CONFIGURATION }}'
+          dotnet pack -c '${{ env.BUILD_CONFIGURATION }}'
+          
+      # Publish the package to Azure Artifacts
+      - name: 'dotnet publish'
+        run: dotnet nuget push --api-key AzureArtifacts bin/Release/*.nupkg
+
+  gpr-build-and-deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@master
+      
+      # Setup .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          source-url: ${{ env.GITHUB_PACKAGE_REGISTRY_URL }}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Setup the .NET Core SDK with the appropriate auth token to access the GitHub Package Registry
+      
+      # Run dotnet build and package
+      - name: dotnet build and publish
+        run: |
+          dotnet restore
+          dotnet build --configuration '${{ env.BUILD_CONFIGURATION }}'
+          dotnet pack -c '${{ env.BUILD_CONFIGURATION }}'
+          
+      # Publish the package to GitHub Package Registry
+      - name: 'dotnet publish'
+        run: dotnet nuget push bin/Release/*.nupkg
+
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples

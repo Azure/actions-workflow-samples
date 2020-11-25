@@ -38,7 +38,7 @@ These workflow samples to automate your deployment workflows targeting various A
 * Include 'name' for every workflow to indicate the purpose of the workflow
 * Ensure that starter workflows run on: push by default.  
 * For all secrets to be defined in the workflow, use UPPER_CASE with underscore delimiters instead of snake_case or camelCase.
-* Include a commented **Configuration section** which incldes hyperlinks to documentation for the Actions used and other pre-reqs.
+* Include a commented **Configuration section** which includes hyperlinks to documentation for the Actions used and other pre-reqs.
 * Define environment variables as part of configuration.  We think this will help provide visibility into the things that need to be configured as part of te workflow.
 * Ensure all Azure actions referenced in the workflow are pointing to a released version of the action and not from the master. For list of all released GitHub actions for Azure, please refer to https://github.com/Azure/actions
 
