@@ -12,7 +12,9 @@ on:
 #   2. Setup the service principal and create the credentials
 #   3. Create the Git Hub repo required secrets.
 #   4. Finally execute the azuredeploy.yaml from the Git Hub repo Actions (workflow display name: "Create Azure Resources")
-# https://github.com/Azure-Samples/dotnetcore-containerized-sqldb-ghactions/blob/main/.github/workflows/azuredeploy.yaml
+#
+# Prequisites workflow: https://github.com/Azure-Samples/dotnetcore-containerized-sqldb-ghactions/blob/main/.github/workflows/azuredeploy.yaml
+# For detailed sample explanation: https://github.com/Azure-Samples/dotnetcore-containerized-sqldb-ghactions/blob/main/README.md
 
 env:
   AZURE_RESOURCE_GROUP: rg-todo-sample  # target resource, must match the {resource-group-name} you setup in the pre-requisties
