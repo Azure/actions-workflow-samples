@@ -1,0 +1,8 @@
+{
+    "name": "Docker ASP.NET Core Web App with Azure SQL backend to Azure",
+    "description": "Build and Deploy docker ASP.NET Core Web App with Azure SQL backend to Azure",
+    "iconName": "azure",
+    "categories": [
+        "Docker", "ASP.NET Core", "Azure SQL", "Deployment"
+    ]
+}
