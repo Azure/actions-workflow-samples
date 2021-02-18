@@ -51,6 +51,7 @@ If you already have an app in GitHub that you want to deploy, you can create a w
 | Java      | [java_war.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/java-war-webapp-on-azure.yml) |https://github.com/Azure-Samples/Java-application-petstore-ee7|
 | Python     | [python.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/python-webapp-on-azure.yml) | https://github.com/Azure-Samples/pythonSample_thecatsaidno|
 | DOCKER     | [docker.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/docker-webapp-container-on-azure.yml) | https://github.com/Azure-Samples/Node_express_container|
+| DOCKER DotNet Core & SQL | [docker_dotnet_core_sql.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/docker-webapp-container-on-azure.yml) | https://github.com/Azure-Samples/dotnetcore-containerized-sqldb-ghactions|
 
 
 ### Sample workflow to build and deploy a Node.js Web app to Azure using publish profile
