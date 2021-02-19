@@ -20,6 +20,7 @@ jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
+    environment: dev
     steps:
     - uses: actions/checkout@master
     - name: Set up JDK 1.8
