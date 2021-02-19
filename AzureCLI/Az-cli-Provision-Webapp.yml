@@ -17,6 +17,7 @@ env:
 jobs:
   build-and-deploy-to-dev:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
     - uses: actions/checkout@master
             
