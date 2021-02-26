@@ -5,6 +5,7 @@ on:
   [push]
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
+# See this in-depth article on CI for Python applications: https://azure.github.io/AppService/2020/12/11/cicd-for-python-apps.html
 #
 # 1. Set up the following secrets in your repository:
 #   AZURE_CREDENTIALS_GITHUB_SECRET
