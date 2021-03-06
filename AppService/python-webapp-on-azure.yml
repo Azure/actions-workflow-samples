@@ -1,40 +1,60 @@
-name: Deploy Python package to Azure Web App
-
+# Python on Linux Web App
+# Build a Python project (using Django/Flask/Bottle frameworks) and deploy it to Azure as a Linux web app.
+name: Deploy Python package to Azure Web App as a Linux web app.
 on:
   [push]
-
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
+# See this in-depth article on CI for Python applications: https://azure.github.io/AppService/2020/12/11/cicd-for-python-apps.html
 #
 # 1. Set up the following secrets in your repository:
-#   AZURE_WEBAPP_PUBLISH_PROFILE
+#   AZURE_CREDENTIALS_GITHUB_SECRET
 #
 # 2. Change these variables for your configuration:
 env:
   AZURE_WEBAPP_NAME: Python-thecatsaidno # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'         # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.7'                  # set this to the python version to use
+  WORKING_DIRECTORY: '.'         # set this to the path to your path of working directory inside github repository, defaults to the repository root
+  PYTHON_VERSION: '3.7' 
+  STARTUP_COMMAND: ''           # set this to the startup command required to start the gunicorn server. default it is empty
 
+name: Build and deploy Python app
 jobs:
-  build:
-    name: Build and Deploy
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Deploy Web App using GH Action azure/webapps-deploy
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
-# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
+ build-and-deploy:
+  runs-on: ubuntu-latest
+  environment: dev
+  steps:
+  # checkout the repo 
+  - uses: actions/checkout@master
+  # setup python
+  - name: Setup Python
+    uses: actions/setup-python@v1
+    with:
+     python-version: ${{ env.PYTHON_VERSION }}
+  # install dependencies
+  - name: python install
+    working-directory: ${{ env.WORKING_DIRECTORY }}
+    run: |
+     sudo apt install python${{ env.PYTHON_VERSION }}-venv
+     python -m venv --copies antenv
+     source antenv/bin/activate
+     pip install setuptools
+     pip install -r requirements.txt
+  # Azure login
+  - uses: azure/login@v1
+    with:
+     creds: ${{ secrets.AZURE_CREDENTIALS_GITHUB_SECRET }}
+  - uses: azure/appservice-settings@v1
+    with:
+     app-name: ${{ env.AZURE_WEBAPP_NAME }}
+     mask-inputs: false
+     general-settings-json: '{"linuxFxVersion": "PYTHON|${{ env.PYTHON_VERSION }}"}' #'General configuration settings as Key Value pairs'
+  # deploy web app
+  - uses: azure/webapps-deploy@v2
+    with:
+     app-name: ${{ env.AZURE_WEBAPP_NAME }}
+     package: ${{ env.WORKING_DIRECTORY }}
+     startup-command: ${{ env.STARTUP_COMMAND }}
+  # Azure logout
+  - name: logout
+    run: |
+     az logout
