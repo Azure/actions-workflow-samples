@@ -1,0 +1,8 @@
+{
+    "name": "Publish NPM Packages",
+    "description": "Publish Nuget package to Azure Artifacts, GitHub Package Registry and NPMJS",
+    "iconName": "azure",
+    "categories": [
+        "NPM", "Deployment"
+    ]
+}
