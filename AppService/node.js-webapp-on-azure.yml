@@ -9,10 +9,7 @@ on:
 # 1. Set up the following secrets in your repository:
 #   AZURE_WEBAPP_PUBLISH_PROFILE
 #
-# 2. Need not check-in node_modules/ as the modules are getting installed on the runner machine during the deploy
-#    using the run step specified below. This will reduce the extra time in the deployment.
-#
-# 3. Change these variables for your configuration:
+# 2. Change these variables for your configuration:
 env:
   AZURE_WEBAPP_NAME: your-app-name    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
@@ -30,7 +27,7 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
     - name: npm install, build, and test
       run: |
-        # Build and test the project, then
+        # Install dependencies, build and test the project, then
         # deploy to Azure Web App.
         npm install
         npm run build --if-present
