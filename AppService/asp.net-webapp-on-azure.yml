@@ -22,6 +22,7 @@ env:
 jobs:
   build-and-deploy:
     runs-on: windows-latest
+    environment: dev
     steps:
 
     # checkout the repo

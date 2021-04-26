@@ -21,6 +21,7 @@ name: Build and deploy Python app
 jobs:
  build-and-deploy:
   runs-on: ubuntu-latest
+  environment: dev
   steps:
   # checkout the repo 
   - uses: actions/checkout@master
