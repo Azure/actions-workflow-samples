@@ -10,7 +10,7 @@
     "name": "alagrawa"
   },
   "dependencies": {
-    "applicationinsights": "^1.0.0",
+    "applicationinsights": "^1.8.10",
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.0",
     "debug": "^2.2.0",
