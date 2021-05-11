@@ -1,0 +1,116 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Publish NPM Package to Azure Artifacts, GitHub Package Registry and NPMJS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+# CONFIGURATION
+#
+# 1. Set the environment variables for your Azure Artifacts Feed, GitHub Package Registry, Node Version and NPMJS details as appropriate.
+#
+# 2. Notice that in the actions/setup-node action that there is a NODE_AUTH_TOKEN environment
+#    For Azure Artifacts, you will need to add a repository secret AZURE_ARTIFACTS_TOKEN
+#    For GitHub Package Registry, this secret is injected via GitHub Actions
+#    For NPM, you will need to add a repository secret NPM_TOKEN
+#
+#    You can find more information on that in the documentation below.
+#    https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/using-github-packages-with-github-actions#authenticating-to-package-registries-on-github
+#    https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages
+
+env:
+  AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL: 'enterdetailshere'                                                                            # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
+  AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL_OR_REGISTRY: 'enterdetailshere'                                                                # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
+  AZURE_ARTIFACTS_FEED_URL: 'enterdetailshere'                                                                                        # set this to the registry url for your Azure Artifacts Feed, you will find this in Azure DevOps
+  AZURE_ARTIFACTS_FEED_USERNAME: 'enterdetailshere'                                                                                   # set this to the username found in the azure artifacts example
+  NODE_VERSION: '12'                                                                                                                  # set this to the node version to use
+  GITHUB_PACKAGE_REGISTRY_URL: 'https://npm.pkg.github.com'                                                                           # set this to the registry url for your GitHub package registry
+  GITHUB_PACKAGE_REGISTRY_SCOPE: '@organisation/repository'                                                                           # set this to the account/organisation name, and repo, e.g. @account/repo or @organisation/repo
+  NPM_PACKAGE_REGISTRY_URL: 'https://registry.npmjs.org/'                                                                             # set this to the registry url for your GitHub package registry
+  WORKING_DIRECTORY: './npm-package-sample'
+ 
+jobs:
+  # First, a build stage which gathers the needed dependencies and runs any tests rerquired by the npm package
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm test
+      
+  # Once build is complete, the publish Azure Artifacts step will run.
+  # It checks out the code, sets up node on the GitHub Actions  runner, and ensures the appropriate configuration is in place.
+  # Once the pre-requisites are complete, the npm package's dependencies are retrieved and then the package is published.
+  publish-azure-artifacts:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
+          always-auth: true
+      
+      - name: Replace with appropriate .npmrc
+        run: |
+          echo "registry=${{ env.AZURE_ARTIFACTS_FEED_URL }}                       
+          always-auth=true
+          ; begin auth token
+          ${{ env.AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL }}:username=${{ env.AZURE_ARTIFACTS_FEED_USERNAME }}
+          ${{ env.AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL }}:_password=${{ secrets.AZURE_ARTIFACTS_BASE64_PAT }}
+          ${{ env.AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL }}:email=npm requires email to be set but doesn't use the value
+          ${{ env.AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL_OR_REGISTRY }}:username=${{ env.AZURE_ARTIFACTS_FEED_USERNAME }}
+          ${{ env.AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL_OR_REGISTRY }}:_password=${{ secrets.AZURE_ARTIFACTS_BASE64_PAT }}
+          ${{ env.AZURE_ARTIFACTS_FEED_URL_NO_PROTOCOL_OR_REGISTRY }}:email=npm requires email to be set but doesn't use the value
+          ; end auth token" > /home/runner/work/_temp/.npmrc
+      - run: npm ci
+      - run: npm publish
+
+  # Once build is complete, the Publish to GitHub Package Registry step will run.
+  # It checks out the code, sets up node on the GitHub Actions runner. The GitHub Token stored in the repository secrets is used for
+  # authentication when the package is published.
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.GITHUB_PACKAGE_REGISTRY_URL }}
+          # Defaults to the user or organization that owns the workflow file
+          scope: ${{ env.GITHUB_PACKAGE_REGISTRY_SCOPE }}
+      - run: npm ci
+      - run: npm publish --registry ${{ env.GITHUB_PACKAGE_REGISTRY_URL }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Once build is complete, the Publish to NPM Package Registry step will run.
+  # It checks out the code, sets up node on the GitHub Actions runner. The NPM Token stored in the repository secrets is used for
+  # authentication when the package is published.          
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_PACKAGE_REGISTRY_URL }}
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
