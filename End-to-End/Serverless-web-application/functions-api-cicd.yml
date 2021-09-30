@@ -1,0 +1,124 @@
+name: Build and publish .NET Functions
+on: 
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT_TYPE: 
+        description: 'Environment: dev, test, or prod'
+        required: true
+        default: 'dev'
+      APP_NAME_PREFIX: 
+        description: 'Prefix to be used in naming Azure resources'
+        required: true
+        default: 'prefix'
+      RESOURCE_GROUP_NAME: 
+        description: 'Resource Group to deploy Azure resources'
+        required: true
+        default: 'resource-group'
+      API_NAME: 
+        description: 'API name'
+        required: true
+        default: '2do'
+      API_DOCUMENT_URL: 
+        description: 'API definition URL'
+        required: true
+        default: 'https://<fuction-name>.azurewebsites.net/api/swagger.json'
+      APIM_NAME: 
+        description: 'APIM name'
+        required: true
+        default: 'apim-name'
+      FUNCTION_NAME: 
+        description: 'Azure Functions name'
+        required: true
+        default: 'function-name'
+      ORIGIN_URL: 
+        description: 'Client app URL' # This is CDN endpoint URL
+        required: true
+        default: 'https://<cdn-endpoint-name>.azureedge.net'              
+  
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_CREDENTIALS
+#
+# 2. Change below variables for your configuration:
+env:
+  ENVIRONMENT_TYPE: ${{ github.event.inputs.ENVIRONMENT_TYPE }}
+  APP_NAME_PREFIX: ${{ github.event.inputs.APP_NAME_PREFIX }}
+  RESOURCE_GROUP_NAME: ${{ github.event.inputs.RESOURCE_GROUP_NAME }}
+  API_NAME: ${{ github.event.inputs.API_NAME }}
+  API_DOCUMENT_URL: ${{ github.event.inputs.API_DOCUMENT_URL }}
+  APIM_NAME: ${{ github.event.inputs.APIM_NAME }}
+  FUNCTION_NAME: ${{ github.event.inputs.FUNCTION_NAME }}
+  ORIGIN_URL: ${{ github.event.inputs.ORIGIN_URL }}
+  APP_SOURCE_PATH: 'src'
+  FUNCTIONAPP_PATH: 'api/dotnet/ToDoFunctionApp'
+  DOTNET_VERSION: '3.1.410'
+  BICEP_FILE_PATH: 'deploy'
+  BICEP_FILE_NAME: 'api'
+
+jobs:
+  function_cicd:
+    runs-on: ubuntu-latest
+    steps:
+    # Authentication
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+    
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v1
+  
+    # Setup .NET Core environment
+    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    # Build .NET application
+    - name: 'Build .NET application'
+      shell: bash
+      run: | 
+        pushd ./${{ env.APP_SOURCE_PATH }}/${{ env.FUNCTIONAPP_PATH }}
+        dotnet build --configuration Release --output ./outputs
+        popd
+
+    # Publish .NET application to Azure Function
+    - name: Publish to Azure Functions to ${{ env.FUNCTION_NAME }}
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.FUNCTION_NAME }}
+        package: ./${{ env.APP_SOURCE_PATH }}/${{ env.FUNCTIONAPP_PATH }}/outputs
+
+    # Validate and Build ARM Template from Bicep
+    - name: Azure CLI - Validate Bicep file ${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
+      uses: Azure/cli@1.0.4
+      with:
+        # Azure CLI version to be used to execute the script. If not provided, latest version is used
+        azcliversion: 2.27.2
+        # Specify the script here
+        inlineScript: |
+          az deployment group validate -g ${{ env.RESOURCE_GROUP_NAME }} --template-file ./${{ env.BICEP_FILE_PATH }}/main.bicep
+          az bicep upgrade
+          az bicep build --file ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
+
+    # Deployment Bicep template for APIM API 
+    - name: Import ${{ env.ENVIRONMENT_TYPE }} environment API to ${{ env.APIM_NAME }}
+      id: apiDeployment
+      uses: azure/arm-deploy@v1
+      with:
+        deploymentName: '${{ github.run_number }}-api'
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        template: ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.json  # Set this to the location of your template file
+        parameters: apimName=${{ env.APIM_NAME }} openApiUrl=${{ env.API_DOCUMENT_URL }} originUrl=${{ env.ORIGIN_URL }} apimApiName=${{ env.API_NAME }}
+
+    # Azure logout
+    - name: logout
+      run: |
+            az logout
+      if: always()

@@ -1,0 +1,90 @@
+name: Create Azure Resource (IaC)
+on: 
+  workflow_dispatch:
+    inputs:
+      AZURE_REGION: 
+        description: 'Azure Region to deploy Azure resources'
+        required: true    
+        default: 'azure-region'  
+      ENVIRONMENT_TYPE: 
+        description: 'Environment: dev, test, or prod'
+        required: true
+        default: 'dev'
+      APP_NAME_PREFIX: 
+        description: 'Prefix to be used in naming Azure resources'
+        required: true
+        default: 'prefix'
+      RESOURCE_GROUP_NAME: 
+        description: 'Resource Group to deploy Azure resources'
+        required: true
+        default: 'resource-group'
+      MSI_NAME: 
+        description: 'User Managed Identity'
+        required: true
+        default: 'user-msi'
+      MSI_RESOURCE_GROUP: 
+        description: 'Resource Group where User Managed Identity is located'
+        required: true
+        default: 'msi-resource-group'
+  
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_CREDENTIALS
+#
+# 2. Change below variables for your configuration:
+env:
+  AZURE_REGION: ${{ github.event.inputs.AZURE_REGION }}
+  ENVIRONMENT_TYPE: ${{ github.event.inputs.ENVIRONMENT_TYPE }}
+  APP_NAME_PREFIX: ${{ github.event.inputs.APP_NAME_PREFIX }}
+  RESOURCE_GROUP_NAME: ${{ github.event.inputs.RESOURCE_GROUP_NAME }}
+  MSI_NAME: ${{ github.event.inputs.MSI_NAME }}
+  MSI_RESOURCE_GROUP: ${{ github.event.inputs.MSI_RESOURCE_GROUP }}
+  BICEP_FILE_PATH: 'deploy'
+  BICEP_FILE_NAME: 'main'
+  
+jobs:
+  validate_deploy:
+    runs-on: ubuntu-latest 
+    steps:
+    # Authentication
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+    
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    # Build ARM Template from Bicep and create a target Azure resource group  
+    - name: Azure CLI - Validate Bicep file ${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
+      uses: Azure/cli@1.0.4
+      with:
+        # Azure CLI version to be used to execute the script. If not provided, latest version is used
+        azcliversion: 2.27.2
+        # Specify the script here
+        inlineScript: |
+          az group create -l ${{ env.AZURE_REGION }} -n ${{ env.RESOURCE_GROUP_NAME }}
+          az deployment group validate -g ${{ env.APP_NAME_PREFIX }}-${{ env.ENVIRONMENT_TYPE }}-rg --template-file ./${{ env.BICEP_FILE_PATH }}/main.bicep
+          az bicep upgrade 
+          az bicep build --file ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
+
+    # Deployment Bicep template
+    - name: Deploy ${{ env.ENVIRONMENT_TYPE }} environment infrastructure to ${{ env.RESOURCE_GROUP_NAME }}
+      id: infraDeployment
+      uses: azure/arm-deploy@v1
+      with:
+        deploymentName: ${{ github.run_number }}
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        template: ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.json  # Set this to the location of your template file
+        parameters: appNameSuffix=${{ env.APP_NAME_PREFIX }} environmentType=${{ env.ENVIRONMENT_TYPE }} userAssignedIdentityName=${{ env.MSI_NAME }} userAssignedIdentityResourceGroup=${{ env.MSI_RESOURCE_GROUP }}
+
+    # Azure logout
+    - name: logout
+      run: |
+            az logout
+      if: always()
