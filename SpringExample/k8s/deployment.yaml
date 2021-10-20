@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cosmosapp
+  labels:
+    purpose: example-app
+    app: cosmosapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cosmosapp
+  template:
+    metadata:
+      labels:
+        app: cosmosapp
+    spec:
+      containers:
+        - name: cosmosapp
+          image: mahinescluster.azurecr.io/cosmosapp # Replace with your image
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: YOUR_ENV_VARIABLE
+              value: "71ac8979-e82e-4ec6-819d-a1ed4a0e332a"
