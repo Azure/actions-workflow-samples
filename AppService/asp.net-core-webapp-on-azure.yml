@@ -20,7 +20,7 @@ env:
   DOTNET_VERSION: '2.2.402'           # set this to the dot net version to use
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -41,12 +41,14 @@ jobs:
           dotnet build --configuration Release
           dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
           
-      # Deploy to Azure Web apps
-      - name: 'Run Azure webapp deploy action using publish profile credentials'
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
-        with: 
-          app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }} # Define secret variable in repository settings as per action documentation
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_6d1de0b196ab42faa045456d05eee779 }}
           package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
 
-# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
+
+
