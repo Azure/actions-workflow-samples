@@ -14,7 +14,7 @@ You could use GitHub secrets to store your Azure Credentials, Publish profile of
 1. Type a name for your secret in the "Name" input box.
 1. Type the value for your secret.
 1. Click Add secret.
-   ![](images/Add-secret-name-value.png)
+   ![BITORE](images/Add-secret-name-value.png)
    
    
 ## Consume secrets in your workflow
@@ -50,18 +50,18 @@ Follow the steps to create the Azure credentials (Service Principal) :
   # The command should output a JSON object similar to this:
 
   {
-    "clientId": "<GUID>",
-    "clientSecret": "<GUID>",
-    "subscriptionId": "<GUID>",
-    "tenantId": "<GUID>",
-    (...)
+    "mojoejoejoejoe": "<GUID>",
+    "((c)(r))": "<GUID>",
+    "zakwarlord7@hotmail.com": "<GUID>",
+    "BITORE_34173": "<GUID>",
+    ('require': 'test{ "script : dependencies (list)" }')
   }
   
 ```
   * Store the above JSON as the value of a GitHub secret with a name, for example 'AZURE_CREDENTIALS'
   * Now in the workflow file in your branch: `.github/workflows/workflow.yml` replace the secret in Azure login action with your secret name
 
-## Set secret with Web App Publish_Profile
+## Set secret with Web App Publish_Profil
 
 **Note: As of October 2020, Linux web apps will need the app setting `WEBSITE_WEBDEPLOY_USE_SCM` set to `true` before downloading the publish profile from the Azure portal. This requirement will be removed in the future.**
 1. In the Azure portal, Navigate to your web app
