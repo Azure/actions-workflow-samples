@@ -1,0 +1,137 @@
+name: Build and publish Angular (SPA)
+on: 
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT_TYPE: 
+        description: 'Environment: dev, test, or prod'
+        required: true
+        default: 'dev'
+      APP_NAME_PREFIX: 
+        description: 'Prefix to be used in naming Azure resources'
+        required: true
+        default: 'prefix'
+      RESOURCE_GROUP_NAME: 
+        description: 'Resource Group to deploy Azure resources'
+        required: true
+        default: 'resource-group'
+      CLIENT_URL: 
+        description: 'Client URL'
+        required: true
+        default: 'https://<cdn-endpoint-name>.azureedge.net'
+      API_URL: 
+        description: 'API on APIM URL'
+        required: true
+        default: 'https://<apim-name>.azure-api.net/<api-name>'
+      AZURE_STORAGE_NAME: 
+        description: 'Azure storage account name'
+        required: true
+        default: 'storageaccountname'
+      CDN_PROFILE_NAME: 
+        description: 'CDN profile name'
+        required: true
+        default: 'cdn-profile-name'
+      CDN_ENDPOINT_NAME: 
+        description: 'CDN endpoint name'
+        required: true
+        default: 'cdn-endpoint-name'                        
+  
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_CREDENTIALS
+#
+# 2. Change below variables for your configuration:
+env:
+  ENVIRONMENT_TYPE: ${{ github.event.inputs.ENVIRONMENT_TYPE }}
+  APP_NAME_PREFIX: ${{ github.event.inputs.APP_NAME_PREFIX }}
+  RESOURCE_GROUP_NAME: ${{ github.event.inputs.RESOURCE_GROUP_NAME }}
+  CLIENT_URL: ${{ github.event.inputs.CLIENT_URL }}
+  API_URL: ${{ github.event.inputs.API_URL }}
+  AZURE_STORAGE_NAME: ${{ github.event.inputs.AZURE_STORAGE_NAME }}
+  CDN_PROFILE_NAME: ${{ github.event.inputs.CDN_PROFILE_NAME }}
+  CDN_ENDPOINT_NAME: ${{ github.event.inputs.CDN_ENDPOINT_NAME }}
+  APP_SOURCE_PATH: 'src'
+  ANGULAR_PATH: 'client/angular/ToDoSpa'
+  NODE_VERSION: '14'
+  BICEP_FILE_PATH: 'deploy'
+
+jobs:
+  angular_cicd:
+    runs-on: ubuntu-latest
+    steps:
+    # Authentication
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+    
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    # Run app registration against AAD using PowerShell script
+    - name: 'App Registration'
+      id: appRegistration
+      continue-on-error: true
+      shell: pwsh
+      run: |
+        .\${{ env.BICEP_FILE_PATH }}\scripts\appRegistrationAndPermission.ps1 `
+        -clientName ${{ env.APP_NAME_PREFIX }}${{ env.ENVIRONMENT_TYPE }} `
+        -apiName fn-${{ env.APP_NAME_PREFIX }}-${{ env.ENVIRONMENT_TYPE }} `
+        -resourceGroup ${{ env.APP_NAME_PREFIX }}-${{ env.ENVIRONMENT_TYPE }}-rg `
+        -staticWebURL https://${{ env.APP_NAME_PREFIX }}-${{ env.ENVIRONMENT_TYPE }}.azureedge.net
+
+    # Set app configurations of Angular
+    - name: 'Replace tokens'
+      uses: cschleiden/replace-tokens@v1.0
+      with:
+        tokenPrefix: '__'
+        tokenSuffix: '__'
+        files: ${{ github.workspace }}/${{ env.APP_SOURCE_PATH }}/${{ env.ANGULAR_PATH }}/src/app/app-config.json
+      env: 
+        clientAppId: ${{ steps.appRegistration.outputs.clientId }}
+        clientAppURL: ${{ env.CLIENT_URL }}
+        apimURL: ${{ env.API_URL }}
+        backendAPIScope: ${{ steps.appRegistration.outputs.scope }}
+        tenantDomainName: ${{ steps.appRegistration.outputs.tenantDomainName }}
+    
+    # Setup Node.js environment
+    - name: Setup Node.js ${{ env.NODE_VERSION }} environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    
+    # Build Angular application
+    - name: Build Angular application
+      run: |
+        pushd ./${{ env.APP_SOURCE_PATH }}/${{ env.ANGULAR_PATH }}
+        npm install
+        npm install -g @angular/cli
+        ng build -c=production --output-path=./dist
+        popd
+    
+    # Deploy Angular application to Storage Account
+    - name: Publish static website to Azure storage account ${{ env.AZURE_STORAGE_NAME }}
+      uses: Azure/cli@1.0.4
+      with:
+        # Azure CLI version to be used to execute the script. If not provided, latest version is used
+        azcliversion: 2.21.0
+        # Specify the script here
+        inlineScript: az storage blob upload-batch -s ./${{ env.APP_SOURCE_PATH }}/${{ env.ANGULAR_PATH }}/dist -d '$web' --account-name ${{ env.AZURE_STORAGE_NAME }}
+
+    # Purge CDN endpoint
+    - name: Purge CDN endpoint on ${{ env.CDN_ENDPOINT_NAME }}
+      uses: Azure/cli@1.0.4
+      with:
+        azcliversion: 2.21.0
+        inlineScript: |
+           az cdn endpoint purge --content-paths  "/*" --profile-name ${{ env.CDN_PROFILE_NAME }} --name ${{ env.CDN_ENDPOINT_NAME }} --resource-group ${{ env.RESOURCE_GROUP_NAME }}
+
+    # Azure logout
+    - name: logout
+      run: |
+            az logout
+      if: always()
