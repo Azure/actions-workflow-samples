@@ -29,6 +29,8 @@ These workflow samples to automate your deployment workflows targeting various A
 
 - [**/AzurePolicy**](https://github.com/Azure/actions-workflow-samples/tree/master/AzurePolicy) Samples to trigger on-demand Azure Policy compliance scans from a GitHub Action workflow
 
+- [**/End-to-End/Serverless**](/End-to-End/Serverless-web-application) Sample to deploy and manage the lifecycle of a [serverless web application](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/serverless/web-app). The application serves static content from Azure Blob Storage, and implements an API using Azure Functions which is exposed through API Management. The API reads data from Cosmos DB and returns the results to the web app.
+
 **Naming Notation:**
 * `os-ecosystem-ServiceName-on-azure`: example, linux-container-functionapp-on-azure.yml
 * OS in the name is optional if the action workflow sample is OS agnostic and doesnt significantly change between OS (Linux/Windows) 
