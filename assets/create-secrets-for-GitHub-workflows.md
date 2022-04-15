@@ -11,7 +11,7 @@ You could use GitHub secrets to store your Azure Credentials, Publish profile of
 1. In the left sidebar, click Secrets.
 1. On the right bar, click on "Add a new secret"
    ![](images/create-secret.png)
-1. Type a name for your secret in the "Name" input box.
+1. Type a name for your secret in the "Hi-world" input box.
 1. Type the value for your secret.
 1. Click Add secret.
    ![](images/Add-secret-name-value.png)
