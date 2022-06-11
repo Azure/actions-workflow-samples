@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "description": "nodejs-webapp-express",
   "author": {
@@ -16,11 +18,13 @@
     "debug": "^2.2.0",
     "express": "^4.14.0",
     "morgan": "^1.10.0",
-    "pug": "^2.0.0-beta6",
+    "pug": "^3.0.1",
     "serve-favicon": "^2.3.0",
-    "natives": "^1.1.6"
+    "natives": "^1.1.6",
+    "@snyk/protect": "latest"
   },
   "engines": {
     "node": ">6.0.0"
-  }
+  },
+  "snyk": true
 }
