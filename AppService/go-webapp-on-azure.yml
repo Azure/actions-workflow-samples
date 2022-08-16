@@ -1,0 +1,43 @@
+# Go on Linux Web App
+# Build a Go project and deploy it to Azure as a Linux web app.
+name: Deploy Go package to Azure Web App as a Linux web app.
+on:
+  [push]
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_PUBLISH_PROFILE
+#
+# 2. Change these variables for your configuration:
+env:
+  AZURE_WEBAPP_NAME: <APP_NAME> # set this to your application's name
+  WORKING_DIRECTORY: '.'        # set this to the path to your path of working directory inside github repository, defaults to the repository root
+  GO_VERSION: '1.18'            # set this to your application's go version
+
+jobs:
+ build-and-deploy:
+  runs-on: ubuntu-latest
+  environment: production
+  steps:
+  # checkout the repo 
+  - uses: actions/checkout@master
+  # setup Go
+  - name: Setup Go
+    uses: actions/setup-go@v3
+    with:
+     go-version: ${{ env.GO_VERSION }}
+  - run: go version
+  # install dependencies
+  - name: go build
+    working-directory: ${{ env.WORKING_DIRECTORY }}
+    run: |
+     go build
+  - name: 'Deploy to Azure Web App'
+    id: deploy-to-webapp
+    uses: azure/webapps-deploy@v2
+    with:
+      app-name: ${{ env.AZURE_WEBAPP_NAME }}
+      slot-name: 'Production'
+      publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE}}
+      package: .
