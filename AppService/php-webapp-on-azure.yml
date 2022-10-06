@@ -24,7 +24,7 @@ jobs:
     - name: Clone ${{ env.AZURE_WEBAPP_NAME }} repo
       uses: actions/checkout@master
 
-    # setup python
+    # setup php
     - name: PHP ${{ env.PHP_VERSION }} Setup
       uses: actions/setup-php@v1
       with:
