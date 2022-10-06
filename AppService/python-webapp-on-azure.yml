@@ -8,16 +8,15 @@ on:
 # See this in-depth article on CI for Python applications: https://azure.github.io/AppService/2020/12/11/cicd-for-python-apps.html
 #
 # 1. Set up the following secrets in your repository:
-#   AZURE_CREDENTIALS_GITHUB_SECRET
+#   AZURE_WEBAPP_PUBLISH_PROFILE
 #
 # 2. Change these variables for your configuration:
 env:
-  AZURE_WEBAPP_NAME: Python-thecatsaidno # set this to your application's name
+  AZURE_WEBAPP_NAME: '' # set this to your application's name
   WORKING_DIRECTORY: '.'         # set this to the path to your path of working directory inside github repository, defaults to the repository root
-  PYTHON_VERSION: '3.7' 
+  PYTHON_VERSION: '3.10' 
   STARTUP_COMMAND: ''           # set this to the startup command required to start the gunicorn server. default it is empty
 
-name: Build and deploy Python app
 jobs:
  build-and-deploy:
   runs-on: ubuntu-latest
@@ -34,27 +33,15 @@ jobs:
   - name: python install
     working-directory: ${{ env.WORKING_DIRECTORY }}
     run: |
-     sudo apt install python${{ env.PYTHON_VERSION }}-venv
      python -m venv --copies antenv
      source antenv/bin/activate
      pip install setuptools
      pip install -r requirements.txt
-  # Azure login
-  - uses: azure/login@v1
-    with:
-     creds: ${{ secrets.AZURE_CREDENTIALS_GITHUB_SECRET }}
-  - uses: azure/appservice-settings@v1
-    with:
-     app-name: ${{ env.AZURE_WEBAPP_NAME }}
-     mask-inputs: false
-     general-settings-json: '{"linuxFxVersion": "PYTHON|${{ env.PYTHON_VERSION }}"}' #'General configuration settings as Key Value pairs'
-  # deploy web app
-  - uses: azure/webapps-deploy@v2
+ 
+  - name : 'Run Azure webapp deploy action using publish profile credentials'
+    uses: azure/webapps-deploy@v2
     with:
      app-name: ${{ env.AZURE_WEBAPP_NAME }}
      package: ${{ env.WORKING_DIRECTORY }}
      startup-command: ${{ env.STARTUP_COMMAND }}
-  # Azure logout
-  - name: logout
-    run: |
-     az logout
+     publish-profile: ${{ secrets.azureWebAppPublishProfile }}
