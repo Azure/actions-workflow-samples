@@ -19,7 +19,7 @@ jobs:
     environment: dev
     steps:
     - name: 'Checkout GitHub Action'
-      uses: actions/checkout@master
+      uses: actions/checkout@v3
 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
@@ -47,6 +47,7 @@ jobs:
       with:
         app-name: PLEASE_REPLACE_THIS_WITH_YOUR_FUNCTION_APP_NAME
         image: REGISTRY/NAMESPACE/IMAGE:TAG
+
     #- name: 'use the published functionapp url in upcoming steps'
     #  run: |
     #    echo "${{ steps.fa.outputs.app-url }}"
