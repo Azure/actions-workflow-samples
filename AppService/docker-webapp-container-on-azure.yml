@@ -1,75 +1,61 @@
-name: Build and deploy Docker app to Azure
+name: Build and deploy a container to an Azure Web App
 
-on: push
-
-# CONFIGURATION
-# For help, go to https://github.com/Azure/Actions
-#
-# Set up the following secrets in your repository:
-#   AZURE_CREDENTIALS, REGISTRY_USERNAME, REGISTRY_PASSWORD, REGISTRY_URL
-# 2. Change these variables for your configuration:
 env:
-  AZURE_WEBAPP_NAME: AppWithContainer   # set this to your application's name
-  CONTAINER_REGISTRY: ${{ secrets.REGISTRY_URL }}  # set secret with Container Registry URL, example : xyz.azurecr.io 
-# AZURE_RESOURCE_GROUP: ActionsDemo   # set this to your Azure Resource group's name - Needed only if you are provisioning the app in the workflow
-# AZURE_APP_PLAN: ActionPlan  # set this to your App service plan's name - Needed only if you are provisioning the app in the workflow
-  
+  AZURE_WEBAPP_NAME: test-aurore-api   # set this to your application's name
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: 'read'
+  packages: 'write'
+
 jobs:
-  build-and-deploy-to-dev:
+  build:
     runs-on: ubuntu-latest
-    environment: dev
+
     steps:
-    - uses: actions/checkout@master
-    - name: Azure authentication
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-#     - name: Azure CLI script to provision a new Web App for Container
-#       uses: azure/CLI@v0-beta
-#       with:
-#         azcliversion: latest
-#         inlineScript: |
-#           az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  -i nginx
-    - name: ACR authentication
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ env.CONTAINER_REGISTRY }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}    
-    - name: Docker Build & Push to ACR
-      run: |
-        docker build . -t ${{ env.CONTAINER_REGISTRY }}/nodejsapp:${{ github.sha }}
-        docker push ${{ env.CONTAINER_REGISTRY }}/nodejsapp:${{ github.sha }} 
+      - uses: actions/checkout@v3
 
-# Uncomment the below action snippet if the Web app credentials are not updated as web app settings
-#     - name: Set Web App ACR authentication
-#       uses: Azure/appservice-settings@v1
-#       with:
-#         app-name: ${{ env.AZURE_WEBAPP_NAME }} 
-#         app-settings-json: |
-#           [
-#               {
-#                   "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-#                   "value": "${{ secrets.REGISTRY_PASSWORD }}",
-#                   "slotSetting": false
-#               },
-#               {
-#                   "name": "DOCKER_REGISTRY_SERVER_URL",
-#                   "value": "https://${{ env.CONTAINER_REGISTRY }}",
-#                   "slotSetting": false
-#               },
-#               {
-#                   "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-#                   "value": "${{ secrets.REGISTRY_USERNAME  }}",
-#                   "slotSetting": false
-#               }
-#           ]
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: 'Deploy to Azure Web App for Container'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: ${{ env.AZURE_WEBAPP_NAME }} 
-        images: ${{ env.CONTAINER_REGISTRY }}/nodejsapp:${{ github.sha }}
-#         startup-command: 'npm start'    # Include start up command to start the app container
+      - name: Log in to GitHub container registry
+        uses: docker/login-action@v1.10.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
+      - name: Lowercase the repo name
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
+          file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Lowercase the repo name
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: 'ghcr.io/${{ env.REPO }}:${{ github.sha }}'
