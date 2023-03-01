@@ -1,0 +1,8 @@
+{
+    "name": "Gradle Java Serverless App to Azure",
+    "description": "Deploy Java App to Azure Functions with Gradle",
+    "iconName": "azure",
+    "categories": [
+        "java" ,"Gradle" , "Deployment"
+    ]
+}
