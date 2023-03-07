@@ -17,7 +17,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: your-app-name    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '2.2.402'           # set this to the dot net version to use
+  DOTNET_VERSION: '5.0.x'           # set this to the dot net version to use
 
 jobs:
   build-and-deploy:
