@@ -3,24 +3,28 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "description": "nodejs-webapp-express",
   "author": {
     "name": "alagrawa"
   },
   "dependencies": {
-    "applicationinsights": "^1.0.0",
+    "applicationinsights": "^1.8.10",
     "body-parser": "^1.15.0",
-    "cookie-parser": "^1.4.0",
-    "debug": "^2.2.0",
+    "cookie-parser": "^1.4.6",
+    "debug": "^3.1.0",
     "express": "^4.14.0",
-    "morgan": "^1.9.1",
-    "pug": "^2.0.0-beta6",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.1",
     "serve-favicon": "^2.3.0",
-    "natives": "^1.1.6"
+    "natives": "^1.1.6",
+    "@snyk/protect": "latest"
   },
   "engines": {
     "node": ">6.0.0"
-  }
+  },
+  "snyk": true
 }
