@@ -1,4 +1,4 @@
-FROM node:18.3.0-buster-slim
+FROM node:18.14.2-buster-slim
 LABEL maintainer="Azure App Services Container Images <appsvc-images@microsoft.com>"
 
 # Create app directory
