@@ -1,0 +1,3 @@
+echo : github keys/$token needed for azure workflow to work properly
+await keys and $token
+new token and key
