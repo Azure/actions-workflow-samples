@@ -70,3 +70,4 @@ Follow the steps to create the Azure credentials (Service Principal) :
 1. Create a new secret in your GitHub repo using the copied contents of the publish profile.
 
    ![](images/get-publish-profile.png)
+   
