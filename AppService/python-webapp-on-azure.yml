@@ -12,9 +12,9 @@ on:
 #
 # 2. Change these variables for your configuration:
 env:
-  AZURE_WEBAPP_NAME: Python-thecatsaidno # set this to your application's name
-  WORKING_DIRECTORY: '.'         # set this to the path to your path of working directory inside github repository, defaults to the repository root
-  PYTHON_VERSION: '3.7' 
+  AZURE_WEBAPP_NAME: my-app     # set this to your application's name
+  WORKING_DIRECTORY: '.'        # set this to the path to your path of working directory inside github repository, defaults to the repository root
+  PYTHON_VERSION: '3.10'        # set the version to use
   STARTUP_COMMAND: ''           # set this to the startup command required to start the gunicorn server. default it is empty
 
 name: Build and deploy Python app
@@ -24,7 +24,7 @@ jobs:
   environment: dev
   steps:
   # checkout the repo 
-  - uses: actions/checkout@master
+  - uses: actions/checkout@v3
   # setup python
   - name: Setup Python
     uses: actions/setup-python@v1
