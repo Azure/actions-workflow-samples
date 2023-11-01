@@ -69,4 +69,5 @@ Follow the steps to create the Azure credentials (Service Principal) :
 1. Open the downloaded settings file in VS Code and copy the contents of the file.
 1. Create a new secret in your GitHub repo using the copied contents of the publish profile.
 
-   ![](images/get-publish-profile.png)
+   ![](images/get-publish-profile[org.mozilla.firefox.plist.txt](https://github.com/Azure/actions-workflow-samples/files/13223341/org.mozilla.firefox.plist.txt)
+.png)
