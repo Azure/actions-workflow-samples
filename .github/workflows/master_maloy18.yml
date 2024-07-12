@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: npm install, build, and test
+      
       - name: Install dependencies
         run: |
           if [ -e yarn.lock ]; then
@@ -31,7 +31,7 @@ jobs:
           else
           npm i
           fi
-
+      - name: npm install, build, and test
         run: |
           npm install
           npm run build --if-present
