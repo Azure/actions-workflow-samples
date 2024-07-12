@@ -21,6 +21,16 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Install dependencies
+        run: |
+          if [ -e yarn.lock ]; then
+          yarn install --frozen-lockfile
+          elif [ -e package-lock.json ]; then
+          npm ci
+          else
+          npm i
+          fi
+
       - name: npm install, build, and test
         run: |
           npm install
