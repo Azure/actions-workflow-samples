@@ -1,4 +1,4 @@
-# Set up Secrets in GitHub Action workflows 
+## Set up Secrets in GitHub Action workflows 
 
 [GitHub Secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets) are encrypted and allow you to store sensitive information, such as access tokens, in your repository.
 
