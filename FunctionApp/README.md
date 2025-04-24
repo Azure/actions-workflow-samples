@@ -9,10 +9,10 @@ If you are looking for a GitHub Action to deploy your customized container image
 
 ## End-to-End Workflows
 
-### Create Azure Flex Consumption function app and deploy using GitHub Actions (OIDC)
+### Create Azure Flex Consumption function app and deploy using GitHub Actions and Open ID Connect (OIDC)
 
 1. Follow the tutorial [Azure Functions Quickstart](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-vs-code).
-1. Configure a user assigned managed identity to use OIDC by following the tutorial [Use OIC](https://github.com/Azure/functions-action#use-oidc-recommended).
+1. Configure a user assigned managed identity to use OIDC by following the tutorial [Use OIDC](https://github.com/Azure/functions-action#use-oidc-recommended).
 1. Pick a template from the following table depending on your Azure Functions **runtime** and place the template to `.github/workflows/` in your project repository.
 1. Change `APP_NAME` to your function app name.
 1. Commit and push your project to GitHub repository, you should see a new GitHub workflow initiated in **Actions** tab.
