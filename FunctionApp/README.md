@@ -5,11 +5,14 @@ Use `Azure/functions-action` to automate your workflows to deploy to [Azure Func
 If you are looking for a GitHub Action to deploy your customized container image into an Azure Functions container, use [`azure/functions-container-action`](https://github.com/Azure/functions-container-action).
 
 > [!IMPORTANT]
-> Please review the official [Azure Functions Action](https://github.com/Azure/functions-action) repository for the latest instructions.
+> Please review the official [Azure Functions Action](https://github.com/Azure/functions-action) repository for the latest and most thorough instructions.
 
 ## End-to-End Workflows
 
-### Create Azure Flex Consumption function app and deploy using GitHub Actions and Open ID Connect (OIDC)
+### Create Azure Flex Consumption function app and deploy using GitHub Actions and OpenID Connect (OIDC)
+
+> [!NOTE]
+> OpenID Connect is the recommended authentication method because it is the most secure way for your GitHub workflow to authenticate with Azure.
 
 1. Follow the tutorial [Azure Functions Quickstart](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-vs-code).
 1. Configure a user assigned managed identity to use OIDC by following the tutorial [Use OIDC](https://github.com/Azure/functions-action#use-oidc-recommended).
@@ -25,7 +28,7 @@ If you are looking for a GitHub Action to deploy your customized container image
 | Java       | [flex-java-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/flex-java-functionapp-on-azure.yml) |
 | PowerShell | [flex-powershell-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/flex-powershell-functionapp-on-azure.yml) |
 
-### Deploy a non-Flex Consumption function app using GitHub Actions (RBAC)
+### Deploy to a non-Flex Consumption function app using GitHub Actions (RBAC)
 
 1. Pick a template from the following table depending on your Azure Functions **runtime** and **OS type** and place the template to `.github/workflows/` in your project repository.
 2. Change `app-name` to your function app name.
@@ -55,10 +58,13 @@ If you are looking for a GitHub Action to deploy your customized container image
   * [Download Artifact](https://github.com/actions/download-artifact) Download your build artifact for deployment
 Once login is done, the next set of Actions in the workflow can perform tasks such as building, tagging and pushing containers.
 
+## Other Authentication Methods
+
+Beyond OIDC auth, you can choose to use a publish profile or a service principal. These methods work for all SKUs but OIDC authentication is recommended.
+
 ### Using Publish Profile as Deployment Credential
 
-You may want to get the publish profile from your function app. Using publish profile as deployemnt credential is recommended
-if you are not the owner of your Azure subscription.
+You may want to get the publish profile from your function app.
 
 1. In Azure portal, go to your function app.
 2. Click **Get publish profile** and download **.PublishSettings** file.
@@ -101,7 +107,7 @@ jobs:
 
 ```
 
-### Using Azure Service Principle for RBAC as Deployment Credential
+### Using Azure Service Principal for RBAC as Deployment Credential
 
 You may want to create an [Azure Service Principal for RBAC](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview) and add them as a GitHub Secret in your repository.
 
