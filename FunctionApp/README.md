@@ -13,20 +13,21 @@ If you are looking for a GitHub Action to deploy your customized container image
 
 > [!NOTE]
 > OpenID Connect is the recommended authentication method because it is the most secure way for your GitHub workflow to authenticate with Azure. These workflows will work for all function app hosting plans.
+> **Apps running on the Flex Consumption plan should use the Linux samples below.**
 
 1. Follow the tutorial [Azure Functions Quickstart](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-vs-code).
 1. Configure a user assigned managed identity to use OIDC by following the tutorial [Use OIDC](https://github.com/Azure/functions-action#use-oidc-recommended).
-1. Pick a template from the following table depending on your Azure Functions **runtime** and place the template to `.github/workflows/` in your project repository.
+1. Pick a template from the following table depending on your Azure Functions **runtime** and **OS**, and place the template to `.github/workflows/` in your project repository.
 1. Change `APP_NAME` to your function app name.
 1. Commit and push your project to GitHub repository, you should see a new GitHub workflow initiated in **Actions** tab.
 
-| Runtime    | Template |
-|------------|----------|
-| .NET       | [dotnet-functionapp-on-azure-oidc.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/oidc-auth-samples/flex-dotnet-functionapp-on-azure.yml) |
-| Python     | [python-functionapp-on-azure-oidc.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/oidc-auth-samples/flex-python-functionapp-on-azure.yml) |
-| Node       | [node-functionapp-on-azure-oidc.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/oidc-auth-samples/flex-node-functionapp-on-azure.yml) |
-| Java       | [java-functionapp-on-azure-oidc.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/oidc-auth-samples/flex-java-functionapp-on-azure.yml) |
-| PowerShell | [powershell-functionapp-on-azure-oidc.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/oidc-auth-samples/flex-powershell-functionapp-on-azure.yml) |
+| Runtime    | App OS |
+|------------|--------|
+| .NET       | **Windows**: [windows-dotnet-functionapp-on-azure-oidc.yml](./oidc-auth-samples/windows-dotnet-functionapp-on-azure-oidc.yml)<br>**Linux**: [linux-dotnet-functionapp-on-azure-oidc.yml](./oidc-auth-samples/linux-dotnet-functionapp-on-azure-oidc.yml) |
+| Node       | **Windows**: [windows-node-functionapp-on-azure-oidc.yml](./oidc-auth-samples/windows-node-functionapp-on-azure-oidc.yml)<br>**Linux**: [linux-node-functionapp-on-azure-oidc.yml](./oidc-auth-samples/linux-node-functionapp-on-azure-oidc.yml) |
+| Java       | **Windows**: [windows-java-functionapp-on-azure-oidc.yml](./oidc-auth-samples/windows-java-functionapp-on-azure-oidc.yml)<br>**Linux**: [linux-java-functionapp-on-azure-oidc.yml](./oidc-auth-samples/linux-java-functionapp-on-azure-oidc.yml) |
+| PowerShell | **Windows or Linux**: [powershell-functionapp-on-azure-oidc.yml](./oidc-auth-samples/powershell-functionapp-on-azure-oidc.yml) |
+| Python     | **Linux**: [python-functionapp-on-azure-oidc.yml](./oidc-auth-samples/python-functionapp-on-azure-oidc.yml) |
 
 ### Deploy to a function app using GitHub Actions and publish profile
 
@@ -34,14 +35,14 @@ If you are looking for a GitHub Action to deploy your customized container image
 2. Change `app-name` to your function app name.
 3. Commit and push your project to GitHub repository, you should see a new GitHub workflow initiated in **Actions** tab.
 
-| Templates  | Windows |  Linux |
-|------------|---------|--------|
-| DotNet     | [windows-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-dotnet-functionapp-on-azure.yml) | [linux-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-dotnet-functionapp-on-azure.yml) |
-| Node       | [windows-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-node.js-functionapp-on-azure.yml) | [linux-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-node.js-functionapp-on-azure.yml) |
-| PowerShell | [windows-powershell-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-powershell-functionapp-on-azure.yml) | [linux-powershell-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-powershell-functionapp-on-azure.yml) |
-| Java       | [windows-java-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-java-functionapp-on-azure.yml) | [linux-java-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-java-functionapp-on-azure.yml) |
-| Python     | - | [linux-python-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-python-functionapp-on-azure.yml) |
-| DOCKER     | - | [linux-container-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-container-functionapp-on-azure.yml) |
+| Runtime  | App OS |
+|------------|--------|
+| .NET     | **Windows**: [windows-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-dotnet-functionapp-on-azure.yml)<br>**Linux**: [linux-dotnet-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-dotnet-functionapp-on-azure.yml) |
+| Node       | **Windows**: [windows-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-node.js-functionapp-on-azure.yml)<br>**Linux**: [linux-node.js-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-node.js-functionapp-on-azure.yml) |
+| Java       | **Windows**: [windows-java-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-java-functionapp-on-azure.yml)<br>**Linux**: [linux-java-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-java-functionapp-on-azure.yml) |
+| PowerShell | **Windows**: [windows-powershell-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/windows-powershell-functionapp-on-azure.yml)<br>**Linux**: [linux-powershell-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-powershell-functionapp-on-azure.yml) |
+| Python     | **Linux**: [linux-python-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-python-functionapp-on-azure.yml) |
+| DOCKER     | **Linux**: [linux-container-functionapp-on-azure.yml](https://github.com/Azure/actions-workflow-samples/blob/master/FunctionApp/linux-container-functionapp-on-azure.yml) |
 
 ### Dependencies on other Github Actions
 
