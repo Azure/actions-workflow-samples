@@ -1,0 +1,92 @@
+name: Build and deploy .NET project to Azure Function App using OIDC
+
+# CONFIGURATION
+#
+# This workflow can be used to deploy your .NET project to a function app on any hosting plan, except for Container Apps (which uses functions-container-action) and Flex Consumption (which uses `ubuntu-latest` as the runner).
+#
+# For an overview of using GitHub workflows with Azure Functions, see https://learn.microsoft.com/azure/azure-functions/functions-how-to-github-actions
+#
+# 1. Configure a federated identity credential to your GitHub branch on an Azure user-assigned managed identity.
+#   For instructions, follow the README at https://github.com/Azure/functions-action#use-oidc-recommended
+#
+# 2. Add the following values from the managed identity to your repo's variables:
+#   AZURE_CLIENT_ID
+#   AZURE_TENANT_ID
+#   AZURE_SUBSCRIPTION_ID
+#   For instructions on creating repo variables, see https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#defining-configuration-variables-for-multiple-workflows
+#
+# 3. Ensure your workflow is triggered by your desired event. By default, it is triggered when a push is made to main, and it can be manually run.
+#   For guidance on event triggers, see https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/triggering-a-workflow#using-events-to-trigger-workflows
+#
+# 4. Change the variables in the `env` section according to your project:
+#   For the latest list of supported runtimes, see https://learn.microsoft.com/azure/azure-functions/supported-languages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_NAME: 'APP_NAME'         # Set this to your function app name on Azure 
+  AZURE_FUNCTIONAPP_PROJECT_PATH: '.'        # Set this to the path to your function app project, defaults to the repository root. The deploy action will package the contents of this path.
+  DOTNET_VERSION: '9.0.x'                    # Set this to the .NET version of your project
+  BUILD_ARTIFACT_NAME: 'released-package'    # Set this according to your team's naming convention
+  
+jobs:
+  build:
+    runs-on: windows-latest # Assumes your target function app is Windows-based
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: read   # Required for actions/checkout
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.AZURE_FUNCTIONAPP_PROJECT_PATH }}
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: 'Set up .NET version: ${{ env.DOTNET_VERSION }}'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Perform additional steps such as running tests, if needed
+
+      - name: 'Build and prepare .NET project for deployment'
+        run: dotnet publish --configuration Release --output ./output
+
+      - name: Upload artifact for the deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: ${{ env.AZURE_FUNCTIONAPP_PROJECT_PATH }}/output
+          include-hidden-files: true  # Required for .NET projects
+  
+  deploy:
+    runs-on: windows-latest # Assumes your target function app is Windows-based
+    needs: build
+    permissions:
+      id-token: write  # Required for OIDC
+    steps:
+      - name: 'Download artifact from build job'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: ./downloaded-artifact
+     
+      - name: 'Log in to Azure with AZ CLI'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        
+      - name: 'Run the Azure Functions action'
+        uses: Azure/functions-action@v1
+        id: deploy-to-function-app
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ./downloaded-artifact
+
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
