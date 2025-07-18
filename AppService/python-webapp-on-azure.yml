@@ -23,14 +23,16 @@ jobs:
   runs-on: ubuntu-latest
   environment: dev
   steps:
-  # checkout the repo 
+  # Checkout the repo 
   - uses: actions/checkout@v3
-  # setup python
+  
+  # Setup python
   - name: Setup Python
     uses: actions/setup-python@v1
     with:
      python-version: ${{ env.PYTHON_VERSION }}
-  # install dependencies
+  
+  # Install dependencies
   - name: python install
     working-directory: ${{ env.WORKING_DIRECTORY }}
     run: |
@@ -39,16 +41,13 @@ jobs:
      source antenv/bin/activate
      pip install setuptools
      pip install -r requirements.txt
+  
   # Azure login
   - uses: azure/login@v1
     with:
      creds: ${{ secrets.AZURE_CREDENTIALS_GITHUB_SECRET }}
-  - uses: azure/appservice-settings@v1
-    with:
-     app-name: ${{ env.AZURE_WEBAPP_NAME }}
-     mask-inputs: false
-     general-settings-json: '{"linuxFxVersion": "PYTHON|${{ env.PYTHON_VERSION }}"}' #'General configuration settings as Key Value pairs'
-  # deploy web app
+
+  # Deploy web app
   - uses: azure/webapps-deploy@v2
     with:
      app-name: ${{ env.AZURE_WEBAPP_NAME }}
