@@ -5,6 +5,7 @@
 # - hello-app/  
 #   - Dockerfile
 #   - app.py
+#   - requirements.txt
 # - .github/workflows/blessed-sitecontainers-webapp-on-azure.yml
 
 name: Build and deploy Python app to Azure Web App - # Your Web App Name
