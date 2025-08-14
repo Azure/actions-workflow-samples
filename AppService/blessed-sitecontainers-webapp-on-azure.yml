@@ -1,0 +1,143 @@
+# Structure of the sample project:
+# - router-app/
+#   - requirements.txt
+#   - app.py
+# - hello-app/  
+#   - Dockerfile
+#   - app.py
+#   - requirements.txt
+# - .github/workflows/blessed-sitecontainers-webapp-on-azure.yml
+
+name: Build and deploy Python app to Azure Web App - # Your Web App Name
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: 'AppWithSiteContainers' # Replace with your Azure Web App name
+  AZURE_WEBAPP_SLOT_NAME: 'Production' # Replace with your Azure Web App slot name
+  CONTAINER_REGISTRY: ${{ secrets.REGISTRY_URL }} # Set secret with Container Registry URL, example : xyz.azurecr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read #This is required for actions/checkout
+
+    steps:
+      # Steps to build and upload artifacts for python app.
+      - uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+
+      - name: Create and start virtual environment
+        working-directory: router-app # As blessed app code is in router-app folder
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+      
+      - name: Install dependencies
+        working-directory: router-app
+        run: |
+          pip install -r requirements.txt
+
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-app
+          path: |
+            router-app
+            !router-app/venv/
+      
+      # Steps to build and push Sidecar container image to Azure Container Registry.
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: Build and push container hello-app image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ./hello-app # As sidecar app code is in hello-app folder
+          push: true
+          tags: ${{ env.CONTAINER_REGISTRY }}/test/hello-app:${{ github.sha }}
+          file: ./hello-app/Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: python-app
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v3
+        id: deploy-to-webapp
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: ${{ env.AZURE_WEBAPP_SLOT_NAME }}
+          # Mention properties for the sitecontainers one by one in a list of json objects.
+          sitecontainers-config: >-
+            [
+              {
+                "name": "hello-app",
+                "image": "${{ env.CONTAINER_REGISTRY }}/test/hello-app:${{ github.sha }}",
+                "targetPort": 5001,
+                "isMain": false
+              }
+            ]
+
+# Following properties can be set for each container in the sitecontainers-config list.
+# SiteContainer 
+# {
+#     name: string, // mandatory
+#     image: string, // mandatory
+#     isMain: boolean, // mandatory
+#     targetPort?: string,
+#     startupCommand?: string,
+#     authType?: AUTH_TYPE,
+#     userName?: string,
+#     passwordSecret?: string,
+#     userManagedIdentityClientId?: string,
+#     environmentVariables?: EnvironmentVariable[],
+#     volumeMounts?: VolumeMount[],
+#     inheritAppSettingsAndConnectionStrings?: boolean,
+#   }
+
+# AUTH_TYPE is any of the following:
+#   Anonymous,
+#   UserCredentials,
+#   SystemIdentity,
+#   UserAssigned
+
+# type EnvironmentVariable {
+#   name: string; // mandatory
+#   value: string; // mandatory
+# }
+# type VolumeMount {
+#     name: string; // mandatory
+#     mountPath: string; // mandatory
+#     readOnly?: boolean;
+# }
