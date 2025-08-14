@@ -1,5 +1,5 @@
 
-# This GitHub Actions workflow builds and deploys site containers to an Azure Web App.
+# This GitHub Actions workflow builds and deploys SiteContainers to an Azure Web App.
 # It builds two containers (router-app and hello-app) and pushes them to a container registry
 
 # Structure of the sample project, where router-app is the main container and hello-app is the sidecar container:
@@ -13,7 +13,7 @@
 #   - requirements.txt
 # - .github/workflows/sitecontainers-webapp-on-azure.yml
 
-name: Build and deploy site container app to Azure Web App
+name: Build and deploy SiteContainer app to Azure Web App
 on:
   push:
     branches:
