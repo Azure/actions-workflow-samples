@@ -1,0 +1,136 @@
+
+# This GitHub Actions workflow builds and deploys SiteContainers to an Azure Web App.
+# It builds two containers (router-app and hello-app) and pushes them to a container registry
+
+# Structure of the sample project, where router-app is the main container and hello-app is the sidecar container:
+# - router-app/  
+#   - requirements.txt
+#   - app.py
+#   - Dockerfile
+# - hello-app/  
+#   - Dockerfile
+#   - app.py
+#   - requirements.txt
+# - .github/workflows/sitecontainers-webapp-on-azure.yml
+
+name: Build and deploy SiteContainer app to Azure Web App
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: 'your-web-app-name' # Replace with your Azure Web App name
+  CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }} # Set secret with Container Registry URL, example : xyz.azurecr.io
+  AZURE_WEBAPP_SLOT_NAME: 'production' # Replace with your Azure Web App slot name, if applicable
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+
+      # Mention all the containers one by one you want to build and push
+      - name: Build and push container router-app image to registry # This is the first container (main container)
+        uses: docker/build-push-action@v3
+        with:
+          context: ./router-app # Path to the context for container 1, in this case, router-app
+          push: true
+          tags: ${{ env.CONTAINER_REGISTRY }}/test/router-app:${{ github.sha }} # Use the sha of the commit as the tag, specify the image name
+          file: ./router-app/Dockerfile # Path to the Dockerfile for container 1
+
+      - name: Build and push container hello-app image to registry # This is the second container (secondary container)
+        uses: docker/build-push-action@v3
+        with:
+          context: ./hello-app # Path to the context for container 2, in this case, hello-app
+          push: true
+          tags: ${{ env.CONTAINER_REGISTRY }}/test/hello-app:${{ github.sha }} # Use the sha of the commit as the tag, specify the image name
+          file: ./hello-app/Dockerfile # Path to the Dockerfile for container 2
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+
+    needs: build
+
+    steps:
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.CLIENTID }}
+          tenant-id: ${{ secrets.TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: ${{ env.AZURE_WEBAPP_SLOT_NAME }}
+          # Mention properties for the containers one by one in a list of json objects
+          sitecontainers-config: >-
+            [
+            {
+                "name": "main",
+                "image": "${{ env.CONTAINER_REGISTRY }}/test/router-app:${{ github.sha }}",
+                "targetPort": 5000,
+                "isMain": true,
+                "environmentVariables": [{"name": "testing", "value": "TestEnv"}],
+                "volumeMounts": [{"name": "abc", "mountPath": "xyz", "readOnly" : true}]
+              },
+              {
+                "name": "hello-app",
+                "image": "${{ env.CONTAINER_REGISTRY }}/test/hello-app:${{ github.sha }}",
+                "targetPort": 5001,
+                "isMain": false
+              }
+            ]
+
+# Following properties can be set for each container in the sitecontainers-config list.
+# SiteContainer 
+# {
+#     name: string, // mandatory
+#     image: string, // mandatory
+#     isMain: boolean, // mandatory
+#     targetPort?: string,
+#     startupCommand?: string,
+#     authType?: AUTH_TYPE,
+#     userName?: string,
+#     passwordSecret?: string,
+#     userManagedIdentityClientId?: string,
+#     environmentVariables?: EnvironmentVariable[],
+#     volumeMounts?: VolumeMount[],
+#     inheritAppSettingsAndConnectionStrings?: boolean,
+#   }
+
+# AUTH_TYPE is any of the following:
+#   Anonymous,
+#   UserCredentials,
+#   SystemIdentity,
+#   UserAssigned
+
+# type EnvironmentVariable {
+#   name: string; // mandatory
+#   value: string; // mandatory
+# }
+# type VolumeMount {
+#     name: string; // mandatory
+#     mountPath: string; // mandatory
+#     readOnly?: boolean;
+# }
