@@ -38,7 +38,8 @@ steps:
 Most of the Azure services use user-level Azure credentials i.e., Azure Service Principal for deployments. 
 
 Follow the steps to create the Azure credentials (Service Principal) :
-    * Run the below [az cli](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest) command 
+
+  * Run the below [az cli](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest) command 
 ```bash  
 
    az ad sp create-for-rbac --name "myApp" --role contributor \
