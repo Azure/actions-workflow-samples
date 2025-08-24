@@ -70,3 +70,4 @@ Follow the steps to create the Azure credentials (Service Principal) :
 1. Create a new secret in your GitHub repo using the copied contents of the publish profile.
 
    ![](images/get-publish-profile.png)
+1. In case of `Failed to fetch credentials from Publish Profile` error, change `waws-prod.publish.azurewebsites.windows.net` to `your_app_name.scm.azurewebsites.net` as described in [this](https://stackoverflow.com/questions/64376240/github-action-for-azure-python-webapp-failed-to-fetch-credentials-from-publish) StackOverflow question.
