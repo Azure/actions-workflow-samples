@@ -32,7 +32,7 @@ jobs:
       shell: pwsh
       run: |
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        dotnet build --configuration Release --output ./output
+        dotnet build --configuration Release --property:OutputPath=./output
         popd
 
     - name: 'Run Azure Functions Action'
