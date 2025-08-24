@@ -12,6 +12,8 @@
 on: [push]
 
 # Environment variables available to all jobs and steps in this workflow
+#CHECK
+
 env:
   REGISTRY_NAME: my-registry-name
   CLUSTER_NAME: my-cluster-name
