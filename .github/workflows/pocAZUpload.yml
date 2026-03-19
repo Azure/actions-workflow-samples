@@ -43,7 +43,7 @@ jobs:
         run: |
           az artifacts universal publish \
             --organization ${{ vars.AZDO_ORG }} \
-            --project ${{ vars.AZDO_PROJECT }} \
+            --project "${{ vars.AZDO_PROJECT }}" \
             --scope project \
             --feed ACE1 \
             --name ${{env.PACKAGE_NAME}} \
