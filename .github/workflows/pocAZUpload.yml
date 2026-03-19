@@ -35,8 +35,7 @@ jobs:
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEY }}
         run: |
-          #az devops configure --defaults organization="https://dev.azure.com/${{ env.ORG }}" project="${{ env.PROJECT }}"
-           az devops configure --defaults organization="${{ vars.AZDO_ORG }}" project="${{ vars.AZDO_PROJECT }}"
+          az devops configure --defaults organization="${{ vars.AZDO_ORG }}" project="${{ vars.AZDO_PROJECT }}"
       - name: Publish Universal Package
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEY }}
@@ -46,7 +45,7 @@ jobs:
             --project "${{ vars.AZDO_PROJECT }}" \
             --scope project \
             --feed ACE1 \
-            --name ${{env.PACKAGE_NAME}} \
+            --package info.txt
             --version ${{env.PACKAGE_VERSION}} \
             --description "Published from GitHub Actions run $GITHUB_RUN_NUMBER" \
             --path out
