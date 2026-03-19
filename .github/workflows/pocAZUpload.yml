@@ -45,7 +45,7 @@ jobs:
             --project "${{ vars.AZDO_PROJECT }}" \
             --scope project \
             --feed ACE1 \
-            --package info.txt
+            --package info.txt \
             --version ${{env.PACKAGE_VERSION}} \
             --description "Published from GitHub Actions run $GITHUB_RUN_NUMBER" \
             --path out
