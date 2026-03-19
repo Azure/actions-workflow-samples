@@ -44,9 +44,10 @@ jobs:
           az artifacts universal publish \
             --organization ${{ vars.AZDO_ORG }} \
             --project ${{ vars.AZDO_PROJECT }} \
-            --scope project
-            --feed ${{vars.AZDO_FEED}} \
+            --scope project \
+            --feed ACE \
             --name ${{env.PACKAGE_NAME}} \
             --version ${{env.PACKAGE_VERSION}} \
             --description "Published from GitHub Actions run $GITHUB_RUN_NUMBER" \
             --path out
+  
