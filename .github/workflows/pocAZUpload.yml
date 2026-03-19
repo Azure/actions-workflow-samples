@@ -45,7 +45,7 @@ jobs:
             --organization ${{ vars.AZDO_ORG }} \
             --project ${{ vars.AZDO_PROJECT }} \
             --scope project \
-            --feed ACE \
+            --feed ACE1 \
             --name ${{env.PACKAGE_NAME}} \
             --version ${{env.PACKAGE_VERSION}} \
             --description "Published from GitHub Actions run $GITHUB_RUN_NUMBER" \
