@@ -42,11 +42,11 @@ jobs:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEY }}
         run: |
           az artifacts universal publish \
-            --organization "${{ vars.AZDO_ORG }}" \
-            --project "${{ vars.AZDO_PROJECT }}" \
+            --organization ${{ vars.AZDO_ORG }} \
+            --project ${{ vars.AZDO_PROJECT }} \
             --scope project
-            --feed "${{vars.AZDO_FEED}}" \
-            --name "${{env.PACKAGE_NAME}}" \
-            --version "${{env.PACKAGE_VERSION}}" \
+            --feed ${{vars.AZDO_FEED}} \
+            --name ${{env.PACKAGE_NAME}} \
+            --version ${{env.PACKAGE_VERSION}} \
             --description "Published from GitHub Actions run $GITHUB_RUN_NUMBER" \
             --path out
