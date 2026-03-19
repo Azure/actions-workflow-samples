@@ -42,7 +42,7 @@ jobs:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEY }}
         run: |
           az artifacts universal publish \
-            --organization "${ORG}" \
+            --organization "${{ vars.AZDO_ORG }}" \
             --project "${{ vars.AZDO_PROJECT }}" \
             --scope project
             --feed "${vars.AZDO_FEED}" \
