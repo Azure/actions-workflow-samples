@@ -33,12 +33,12 @@ jobs:
 
       - name: Azure DevOps login (PAT)
         env:
-          AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEY }}
+          AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEYW }}
         run: |
           az devops configure --defaults organization="${{ vars.AZDO_ORG }}" project="${{ vars.AZDO_PROJECT }}"
       - name: Publish Universal Package
         env:
-          AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEY }}
+          AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PKEYW }}
         run: |
           az artifacts universal publish \
             --organization ${{ vars.AZDO_ORG }} \
