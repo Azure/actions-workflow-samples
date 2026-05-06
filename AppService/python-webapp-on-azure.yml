@@ -17,9 +17,9 @@ env:
   PYTHON_VERSION: '3.10'        # set the version to use
   STARTUP_COMMAND: ''           # set this to the startup command required to start the gunicorn server. default it is empty
 
-name: Build and deploy Python app
 jobs:
  build-and-deploy:
+  name: Build and deploy Python app
   runs-on: ubuntu-latest
   environment: dev
   steps:
